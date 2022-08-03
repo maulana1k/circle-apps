@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Checkbox,
   Divider,
   FormControl,
   FormLabel,
@@ -13,8 +12,6 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react';
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import AuthLayout from './AuthLayout';
 
 export default function ForgotPassword() {

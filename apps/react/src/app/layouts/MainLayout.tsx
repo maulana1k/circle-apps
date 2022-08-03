@@ -1,10 +1,8 @@
 import { Container } from '@chakra-ui/react';
 import { ReactNode } from 'react';
-import { Outlet, Route, Routes } from 'react-router-dom';
-import Feeds from './components/Feeds';
+import { Outlet } from 'react-router-dom';
 import Search from './components/Search';
 import SideNavigation from './components/SideNavigation';
-import Tweets from './components/Tweets';
 
 export default function MainLayout(props: { children?: ReactNode }) {
   return (

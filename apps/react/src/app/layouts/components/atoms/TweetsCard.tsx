@@ -11,13 +11,14 @@ import {
   Center,
 } from '@chakra-ui/react';
 import { ReactNode } from 'react';
-import { FiHeart, FiMessageCircle, FiShare } from 'react-icons/fi';
+import { FiMessageCircle, FiShare } from 'react-icons/fi';
+import { IoHeart, IoHeartOutline } from 'react-icons/io5';
 import { Link } from 'react-router-dom';
 import { ActionButton } from './ActionButton';
 import TweetModal from './TweetModal';
 
 export const LikeButton = (props: { count: number }) => (
-  <ActionButton color="red.400" icon={<FiHeart size={18} />}>
+  <ActionButton color="red.400" icon={<IoHeartOutline size={18} />}>
     {props.count > 0 ? `${props.count} likes` : 'Like'}
   </ActionButton>
 );
