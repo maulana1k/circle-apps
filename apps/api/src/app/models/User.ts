@@ -1,21 +1,16 @@
-import { Schema, Types, Document, model } from 'mongoose';
-
-interface IUser extends Document {
-  displayName: string;
-  username: string;
-  email: string;
-  password: string;
-  avatar: string;
-  profile: Types.ObjectId;
-}
+import { Schema, Types, model } from 'mongoose';
+import { IUser } from '@circle-app/api-interfaces';
 
 const UserSchema = new Schema<IUser>({
   displayName: { type: String, required: true },
   username: { type: String, required: true, unique: true },
-  email: { type: String, required: true, unique: true },
+  email: { type: String, required: true, unique: true, select: false },
   password: { type: String, required: true },
-  avatar: String,
-  profile: Types.ObjectId,
+  avatar: { type: String, default: 'default' },
+  bio: { type: String, default: '' },
+  verified: { type: Boolean, default: false, select: false },
+  followers: [{ type: String, ref: 'User' }],
+  following: [{ type: String, ref: 'User' }],
 });
 
 const User = model<IUser>('User', UserSchema);

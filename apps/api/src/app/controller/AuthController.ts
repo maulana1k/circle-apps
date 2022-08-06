@@ -10,37 +10,42 @@ import {
   response_server_error,
   response_success,
 } from '../utils/responses';
+import { IUser, UserWithToken } from '@circle-app/api-interfaces';
+import { body } from 'express-validator';
 
 class AuthController extends BaseController {
   constructor() {
     super();
     this.basePath = '/auth';
-    this.routes = [
-      {
-        path: '/signin',
-        method: 'post',
-        handler: this.signin,
-        middleware: [],
-      },
-      {
-        path: '/signup',
-        method: 'post',
-        handler: this.signup,
-        middleware: [],
-      },
-    ];
-    this.setRoutes();
+    /**
+     * local middleware
+     */
+    this.router.use((req, res, next) => {
+      next();
+    });
+    /**
+     * Route handler mapping
+     */
+    this.router.post('/signin', this.signin);
+    this.router.post(
+      '/signup',
+      [
+        body('email').isEmail().normalizeEmail(),
+        body('password').isLength({ min: 6 }),
+      ],
+      this.signup
+    );
   }
   private async signin(req: Request, res: Response): Promise<void> {
     try {
       const { username, password } = req.body;
       const user = await User.findOne({ username });
-      console.log(user);
       //check if user is not exist
       if (!user) {
         return response_not_found(res, 'Account is not registered');
       }
       // compare password
+      console.log(user.password);
 
       const match = await bcrypt.compare(password, user.password);
       if (!match) {
@@ -49,8 +54,7 @@ class AuthController extends BaseController {
       // generate token
       const secretKey = process.env.JWT_KEY;
       const token = jwt.sign({ username }, secretKey);
-
-      return response_success(res, { token, user });
+      return response_success<UserWithToken>(res, { token, user });
     } catch (error) {
       return response_server_error(res, error.message);
     }
@@ -58,7 +62,6 @@ class AuthController extends BaseController {
   private async signup(req: Request, res: Response): Promise<void> {
     try {
       const { username, displayName, email, password } = req.body;
-      const avatar = 'gs://nx-app-bcf16.appspot.com/images/avatar.png';
       //check if username is unique
       const isUnique = await User.findOne({ username });
       if (isUnique) {
@@ -77,15 +80,34 @@ class AuthController extends BaseController {
         displayName,
         email,
         password: hashedPassword,
-        avatar,
       });
-      const saved = await user.save();
-      return response_success(res, saved);
+      const savedUser = await user.save();
+      const secretKey = process.env.JWT_KEY;
+      const token = jwt.sign({ username }, secretKey);
+      return response_success<UserWithToken>(res, { token, user: savedUser });
     } catch (error) {
       return response_server_error(res, error.message);
     }
   }
-  private async updateProfile(req, res) {}
+  private async updateProfile(req: Request, res: Response) {
+    try {
+      const { username, displayName, email, password, bio }: IUser = req.body;
+      const user = await User.findOneAndUpdate(
+        { username },
+        {
+          $set: {
+            username,
+            displayName,
+            email,
+            password,
+            bio,
+          },
+        }
+      );
+    } catch (error) {
+      return response_server_error(res, error.message);
+    }
+  }
   private async forgotPassword(req, res) {}
   private async sendOTP(req, res) {}
 }

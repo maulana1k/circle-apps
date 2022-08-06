@@ -26,18 +26,8 @@ abstract class BaseController {
   protected router: Router = Router();
   protected basePath: string;
   protected routes: Array<Route>;
-  protected setRoutes() {
-    this.routes.forEach((route) => {
-      try {
-        route.middleware.forEach((mw) =>
-          this.router[route.method](route.path, mw)
-        );
-        this.router[route.method](route.path, route.handler);
-      } catch (error) {}
-    });
-  }
-  public connectRouter(app: Application) {
-    app.use(this.basePath, this.router);
+  public connectRouter(app: Application, prefix: string) {
+    app.use(prefix + this.basePath, this.router);
   }
 }
 

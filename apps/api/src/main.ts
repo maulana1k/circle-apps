@@ -7,6 +7,7 @@ import bodyParser from 'body-parser';
 import Server from './app/Server';
 import AuthController from './app/controller/AuthController';
 import path from 'path';
+import TweetController from './app/controller/TweetController';
 
 const app = express();
 const port = process.env.PORT;
@@ -36,9 +37,12 @@ server.loadGlobalMiddleware([
 /**
  * load all controllers instance
  */
-server.loadController([new AuthController()]);
+server.loadController([new AuthController(), new TweetController()]);
+/**
+ * export app for testing usage
+ */
+export default server.app;
 /**
  *  STARTS THE ENGINE
  */
-export default server.app;
 server.run();

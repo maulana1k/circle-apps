@@ -26,7 +26,7 @@ export default function Signin() {
         <HStack>
           <Text fontSize={'md'}>Don't have an account?</Text>
           <Text fontSize={'md'} color="twitter.500" as="a">
-            <Link to={'/'}>Create one.</Link>
+            <Link to={'/signup'}>Create one.</Link>
           </Text>
         </HStack>
         <Divider colorScheme={'gray'} />

@@ -1,15 +1,15 @@
 import { Route, Routes } from 'react-router-dom';
-import ForgotPassword from './layouts/auth/ForgotPassword';
-import Signup from './layouts/auth/Signup';
-import Signin from './layouts/auth/Signin';
+import ForgotPassword from '../layouts/auth/ForgotPassword';
+import Signup from '../layouts/auth/Signup';
+import Signin from '../layouts/auth/Signin';
 
-import MainLayout from './layouts/MainLayout';
-import Feeds from './layouts/components/Feeds';
-import Tweets from './layouts/components/Tweets';
-import Profile from './layouts/components/profile/Profile';
-import FollowLists from './layouts/components/profile/FollowLists';
-import ProfileLayout from './layouts/components/profile/ProfileLayout';
-import ComingSoon from './layouts/components/ComingSoon';
+import MainLayout from '../layouts/MainLayout';
+import Feeds from '../components/Feeds';
+import Tweets from '../components/Tweets';
+import Profile from '../components/profile/Profile';
+import FollowLists from '../components/profile/FollowLists';
+import ProfileLayout from '../components/profile/ProfileLayout';
+import ComingSoon from '../components/ComingSoon';
 
 export default function AppRouter() {
   return (

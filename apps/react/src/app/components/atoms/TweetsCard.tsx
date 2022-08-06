@@ -1,18 +1,16 @@
 import {
   Avatar,
   Box,
-  Divider,
   HStack,
   Flex,
   Stack,
   Text,
   useDisclosure,
-  Container,
   Center,
 } from '@chakra-ui/react';
 import { ReactNode } from 'react';
 import { FiMessageCircle, FiShare } from 'react-icons/fi';
-import { IoHeart, IoHeartOutline } from 'react-icons/io5';
+import { IoHeartOutline } from 'react-icons/io5';
 import { Link } from 'react-router-dom';
 import { ActionButton } from './ActionButton';
 import TweetModal from './TweetModal';
