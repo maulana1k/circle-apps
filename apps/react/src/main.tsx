@@ -2,6 +2,8 @@ import { ColorModeScript } from '@chakra-ui/react';
 import { StrictMode } from 'react';
 import * as ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
+import axios from 'axios';
+axios.defaults.baseURL = process.env['API_URI'];
 
 import App from './app/app';
 import './styles.css';

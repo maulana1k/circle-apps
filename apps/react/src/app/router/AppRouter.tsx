@@ -10,6 +10,7 @@ import Profile from '../components/profile/Profile';
 import FollowLists from '../components/profile/FollowLists';
 import ProfileLayout from '../components/profile/ProfileLayout';
 import ComingSoon from '../components/ComingSoon';
+import NewProfile from '../layouts/auth/NewProfile';
 
 export default function AppRouter() {
   return (
@@ -28,6 +29,7 @@ export default function AppRouter() {
         <Route path="/saved" element={<ComingSoon />} />
       </Route>
       <Route path="/signup" element={<Signup />} />
+      <Route path="/signup/new-profile" element={<NewProfile />} />
       <Route path="/signin" element={<Signin />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
     </Routes>

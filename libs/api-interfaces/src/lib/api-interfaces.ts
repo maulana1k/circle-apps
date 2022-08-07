@@ -5,7 +5,7 @@ export interface ResponseApi<T> {
   data: T;
 }
 
-export interface IUser {
+export interface IUser extends Document {
   displayName: string;
   username: string;
   email: string;
@@ -13,6 +13,7 @@ export interface IUser {
   avatar: string;
   bio: string;
   verified: boolean;
+  birth: Date;
   followers: Types.Array<Types.ObjectId>;
   following: Types.Array<Types.ObjectId>;
 }

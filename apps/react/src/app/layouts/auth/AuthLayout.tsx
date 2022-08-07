@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import HeroImg from '../../../assets/img/hero-2.jpg';
+import HeroImg from '../../../assets/img/peeps.png';
 
 export default function AuthLayout(props: { children: ReactNode }) {
   return (

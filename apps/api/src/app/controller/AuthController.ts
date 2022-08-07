@@ -4,12 +4,6 @@ import jwt from 'jsonwebtoken';
 
 import BaseController from './BaseController';
 import User from '../models/User';
-import {
-  response_bad_request,
-  response_not_found,
-  response_server_error,
-  response_success,
-} from '../utils/responses';
 import { IUser, UserWithToken } from '@circle-app/api-interfaces';
 import { body } from 'express-validator';
 
@@ -20,9 +14,6 @@ class AuthController extends BaseController {
     /**
      * local middleware
      */
-    this.router.use((req, res, next) => {
-      next();
-    });
     /**
      * Route handler mapping
      */
@@ -38,55 +29,62 @@ class AuthController extends BaseController {
   }
   private async signin(req: Request, res: Response): Promise<void> {
     try {
-      const { username, password } = req.body;
-      const user = await User.findOne({ username });
+      const { username, email, password } = req.body;
+      console.log(req.body);
+
+      const user = await User.findOne({ $or: [{ username }, { email }] });
       //check if user is not exist
       if (!user) {
-        return response_not_found(res, 'Account is not registered');
+        res.status(400).send('Account is not registered');
+        return;
       }
       // compare password
-      console.log(user.password);
-
       const match = await bcrypt.compare(password, user.password);
       if (!match) {
-        return response_bad_request(res, 'Password is wrong');
+        res.status(400).send('Password wrong');
+        return;
       }
       // generate token
       const secretKey = process.env.JWT_KEY;
-      const token = jwt.sign({ username }, secretKey);
-      return response_success<UserWithToken>(res, { token, user });
+      const token = jwt.sign({ email }, secretKey);
+      res.status(200).json({ user, token });
     } catch (error) {
-      return response_server_error(res, error.message);
+      res.status(500).json(error);
     }
   }
   private async signup(req: Request, res: Response): Promise<void> {
     try {
-      const { username, displayName, email, password } = req.body;
+      const { username, email, password, birth } = req.body;
+      console.log(req.body);
+
       //check if username is unique
       const isUnique = await User.findOne({ username });
       if (isUnique) {
-        return response_bad_request(res, 'Username is already used');
+        res.status(400).send('Username is already used');
+        return;
       }
       //check if user is exist
       const isExist = await User.findOne({ email });
       if (isExist) {
-        return response_bad_request(res, 'Email is already used');
+        res.status(400).send('Email is already used');
+        return;
       }
       // hash current password
       const hashedPassword = await bcrypt.hash(password, 10);
       // create and store user to db
       const user = new User({
         username,
-        displayName,
+        displayName: username,
+        birth,
         email,
         password: hashedPassword,
       });
       const savedUser = await user.save();
       const secretKey = process.env.JWT_KEY;
       const token = jwt.sign({ username }, secretKey);
-      return response_success<UserWithToken>(res, { token, user: savedUser });
+      res.json({ token, user: savedUser });
     } catch (error) {
-      return response_server_error(res, error.message);
+      res.status(500).json(error);
     }
   }
   private async updateProfile(req: Request, res: Response) {
@@ -105,7 +103,7 @@ class AuthController extends BaseController {
         }
       );
     } catch (error) {
-      return response_server_error(res, error.message);
+      res.status(500).json(error);
     }
   }
   private async forgotPassword(req, res) {}
