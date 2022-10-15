@@ -6,33 +6,59 @@ import {
   Text,
   Button,
   Divider,
+  useDisclosure,
 } from '@chakra-ui/react';
+import { ITweet } from '@circle-app/api-interfaces';
+import axios from 'axios';
+import moment from 'moment';
+import { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { UserContext, UserContextType } from '../../context/user.context';
+import TweetModal from './TweetModal';
 import { LikeButton, ReplyButton, ShareButton } from './TweetsCard';
 
-export default function TweetVisited() {
+export default function TweetVisited({ tweet }: { tweet: ITweet }) {
+  const { user } = useContext(UserContext) as UserContextType;
+  const [isLiked, setIsLiked] = useState(tweet.likes.includes(user._id));
+  const [likeCount, setLikeCount] = useState(tweet.likes.length);
+  const { isOpen, onClose, onOpen } = useDisclosure();
+  const navigate = useNavigate();
+  // console.log(isLiked);
+
+  const likeTweet = async (e: any) => {
+    e.stopPropagation();
+    const action = isLiked ? '/unlike/' : '/like/';
+    axios
+      .post('/api/tweet/' + tweet._id + action + user._id)
+      .then(() => {
+        setIsLiked(!isLiked);
+        if (isLiked) {
+          setLikeCount(likeCount - 1);
+        } else {
+          setLikeCount(likeCount + 1);
+        }
+      })
+      .catch((err) => console.log(err));
+  };
   return (
-    <Box bg={'white'} p={3}>
+    <Box w={'full'} bg={'white'} p={3}>
+      <TweetModal replyTo={tweet} isOpen={isOpen} onClose={onClose} />
       <Stack spacing={4}>
         <HStack spacing={2}>
-          <Avatar />
+          <Avatar src={tweet.author.avatar} />
           <Stack spacing={0}>
-            <Text fontWeight={'bold'}>Display name</Text>
+            <Text fontWeight={'bold'}>{tweet.author.displayName}</Text>
             <Text color={'gray.500'}>
-              @username &middot;
+              @{tweet.author.username} &middot;&nbsp;
               <Button variant={'link'} colorScheme={'twitter'}>
                 Follow
               </Button>
             </Text>
           </Stack>
         </HStack>
-        <Text>
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Esse odit
-          error nulla rerum beatae, quis, provident alias, vero dolores
-          architecto facere unde in magni delectus. Laborum nihil eum deleniti
-          temporibus?
-        </Text>
+        <Text whiteSpace={'pre-wrap'}>{tweet.content}</Text>
         <Text fontWeight={400} color={'gray.500'} fontSize={'sm'}>
-          13:56 &middot; Jun 13, 2022
+          {moment(tweet.timestamp.toString()).format('MMMM Do YYYY, h:mm:ss a')}
         </Text>
         <Divider />
       </Stack>
@@ -44,8 +70,12 @@ export default function TweetVisited() {
         pt={4}
         spacing={8}
       >
-        <LikeButton count={45} />
-        <ReplyButton count={0} />
+        <LikeButton
+          onClick={(e: any) => likeTweet(e)}
+          isActive={isLiked}
+          count={likeCount}
+        />
+        <ReplyButton handleClick={onOpen} count={0} />
         <ShareButton count={0} />
       </Stack>
     </Box>

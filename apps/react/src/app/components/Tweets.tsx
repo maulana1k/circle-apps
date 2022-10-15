@@ -9,9 +9,11 @@ import {
   ButtonGroup,
   Divider,
 } from '@chakra-ui/react';
-import { ReactNode } from 'react';
-import { FiArrowLeft, FiHeart, FiMessageCircle, FiShare } from 'react-icons/fi';
-import { Link } from 'react-router-dom';
+import { ITweet } from '@circle-app/api-interfaces';
+import axios from 'axios';
+import { ReactNode, useState, useEffect } from 'react';
+import { FiArrowLeft } from 'react-icons/fi';
+import { Link, useLocation } from 'react-router-dom';
 import TweetsCard from './atoms/TweetsCard';
 import TweetVisited from './atoms/TweetVisited';
 
@@ -22,6 +24,27 @@ const ThreadLine = (props: { children?: ReactNode }) => (
 );
 
 export default function Tweets() {
+  const [tweet, setTweet] = useState<ITweet>();
+  const [replies, setReplies] = useState<ITweet[]>([]);
+  const location = useLocation();
+  console.log(replies);
+
+  useEffect(() => {
+    (async () => {
+      await axios
+        .get<ITweet>('/api/tweet/' + location.state)
+        .then((res) => {
+          setTweet(res.data);
+          axios
+            .get<ITweet[]>('/api/tweet/' + res.data._id + '/replies')
+            .then((res) => setReplies(res.data))
+            .catch((err) => console.log(err));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    })();
+  }, [location.pathname]);
   return (
     <>
       <Box
@@ -51,13 +74,11 @@ export default function Tweets() {
         h="full"
         pt={12}
       >
-        <TweetVisited />
-        {[1, 2, 3, 4, 5].map((i) => (
-          <>
-            <Divider />
-            <TweetsCard />
-          </>
-        ))}
+        {tweet && <TweetVisited tweet={tweet} />}
+        <Divider />
+        <Stack divider={<Divider />} w={'full'}>
+          {replies && replies.map((tweet) => <TweetsCard tweet={tweet} />)}
+        </Stack>
       </Stack>
     </>
   );

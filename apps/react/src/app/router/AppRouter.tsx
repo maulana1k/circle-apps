@@ -4,7 +4,7 @@ import Signup from '../layouts/auth/Signup';
 import Signin from '../layouts/auth/Signin';
 
 import MainLayout from '../layouts/MainLayout';
-import Feeds from '../components/Feeds';
+import Home from '../components/Home';
 import Tweets from '../components/Tweets';
 import Profile from '../components/profile/Profile';
 import FollowLists from '../components/profile/FollowLists';
@@ -16,7 +16,7 @@ export default function AppRouter() {
   return (
     <Routes>
       <Route path="/" element={<MainLayout />}>
-        <Route index element={<Feeds />} />
+        <Route index element={<Home />} />
         <Route path="/:username" element={<ProfileLayout />}>
           <Route index element={<Profile />} />
           <Route path="follower" element={<FollowLists />} />

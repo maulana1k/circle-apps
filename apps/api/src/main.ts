@@ -8,6 +8,7 @@ import AuthController from './app/controller/AuthController';
 import path from 'path';
 import TweetController from './app/controller/TweetController';
 import bodyParser from 'body-parser';
+import UsersController from './app/controller/UsersController';
 
 const app = express();
 const port = process.env.PORT;
@@ -38,7 +39,11 @@ server.loadGlobalMiddleware([
 /**
  * load all controllers instance
  */
-server.loadController([new AuthController(), new TweetController()]);
+server.loadController([
+  new AuthController(),
+  new TweetController(),
+  new UsersController(),
+]);
 /**
  * export app for testing usage
  */

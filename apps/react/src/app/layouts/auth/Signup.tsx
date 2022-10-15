@@ -44,7 +44,6 @@ export default function Signup() {
   const [loading, setLoading] = useState<boolean>(false);
   const toast = useToast();
   const navigate = useNavigate();
-
   /**
    * Form handler to change state
    */
@@ -60,14 +59,15 @@ export default function Signup() {
     try {
       setLoading(true);
       const res = await axios.post<UserWithToken>('/api/auth/signup', formData);
+      userContext.dispatcher(res.data);
+      localStorage.setItem('user', JSON.stringify(res.data));
+      navigate('/signup/new-profile', { replace: true });
       toast({
-        title: 'Signin success',
+        title: 'Create account success',
         status: 'success',
         duration: 5000,
         position: 'top-right',
       });
-      userContext.dispatcher(res.data);
-      navigate('/signup/new-profile', { replace: true });
     } catch (error) {
       console.log(error);
 
@@ -149,7 +149,7 @@ export default function Signup() {
                   </InputRightElement>
                 </InputGroup>
               </FormControl>
-              <Checkbox>
+              <Checkbox checked>
                 By signing up i agree to the privacy policy and terms of service
               </Checkbox>
 

@@ -13,51 +13,102 @@ import {
   Center,
 } from '@chakra-ui/react';
 import { FiCheck, FiImage } from 'react-icons/fi';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
-import { peepsImport } from 'apps/react/src/assets/img';
-import AuthLayout from './AuthLayout';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { UserContext, UserContextType } from '../../context/user.context';
+import AuthLayout from './AuthLayout';
+import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
+import axios from 'axios';
+import { IUser } from '@circle-app/api-interfaces';
+import { uploadFiles } from '../../hooks/useFirebase';
 
 export default function NewProfile() {
-  const { user } = useContext(UserContext) as UserContextType;
+  const { user, dispatcher } = useContext(UserContext) as UserContextType;
   /**
    * Avatar props
    */
-  const [displayName, setDisplayName] = useState(user.user.username);
-  const [avatar, setAvatar] = useState('default');
-  const [avaSrc, setAvaSrc] = useState('');
-  const [file, setFile] = useState('');
+  const [displayName, setDisplayName] = useState(user.username);
+  const [avatar, setAvatar] = useState<string>('');
+  const [customAvatar, setCustomAvatar] = useState<string>('');
+  const [file, setFile] = useState<Blob>();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [avatarList, setAvatarList] = useState<string[]>([
+    'https://firebasestorage.googleapis.com/v0/b/nx-app-bcf16.appspot.com/o/images%2Fdefault-avatar%2Fpeep-1.png?alt=media&token=c61c6266-18b2-4a6f-8be7-ac115fbb6dbc',
+    'https://firebasestorage.googleapis.com/v0/b/nx-app-bcf16.appspot.com/o/images%2Fdefault-avatar%2Fpeep-2.png?alt=media&token=615791f5-6f44-435d-8b3f-ffa6b0147dea',
+    'https://firebasestorage.googleapis.com/v0/b/nx-app-bcf16.appspot.com/o/images%2Fdefault-avatar%2Fpeep-3.png?alt=media&token=de03119f-38d6-42f4-989a-0b7bb6119de7',
+    'https://firebasestorage.googleapis.com/v0/b/nx-app-bcf16.appspot.com/o/images%2Fdefault-avatar%2Fpeep-4.png?alt=media&token=2fa60d38-b1d4-4cd1-986e-2590e94fbab6',
+    'https://firebasestorage.googleapis.com/v0/b/nx-app-bcf16.appspot.com/o/images%2Fdefault-avatar%2Fpeep-5.png?alt=media&token=817d2e8d-1e17-493d-be79-9150d328b562',
+    'https://firebasestorage.googleapis.com/v0/b/nx-app-bcf16.appspot.com/o/images%2Fdefault-avatar%2Fpeep-6.png?alt=media&token=f703938c-1058-476f-bf7d-e9b34020ddd6',
+    'https://firebasestorage.googleapis.com/v0/b/nx-app-bcf16.appspot.com/o/images%2Fdefault-avatar%2Fpeep-7.png?alt=media&token=aef36133-07a5-4527-b22f-7d2c34cab996',
+    'https://firebasestorage.googleapis.com/v0/b/nx-app-bcf16.appspot.com/o/images%2Fdefault-avatar%2Fpeep-8.png?alt=media&token=6390d582-9383-45d7-9823-e6c797c86aa5',
+  ]);
+  const navigate = useNavigate();
+  // useEffect(() => {
+  //   (async () => {
+  //     const urlList = await getAllFiles('/images/default-avatar');
+  //     setAvatarList(urlList);
+  //   })();
+  // }, []);
   /**
-   * Change avatar
+   * File upload handler
    */
-  const changeAvatar = (k: any, v: any) => {
-    setAvatar(k);
-    setAvaSrc(v);
-  };
   const fileHandle = (e: any) => {
+    if (e.target.files[0].size > 2 * 1024 * 1024) {
+      alert('Image size too large!');
+      return;
+    }
+    setFile(e.target.files[0]);
     const url = URL.createObjectURL(e.target.files[0]);
-    setFile(url);
+    setAvatar(url);
+    setCustomAvatar(url);
   };
-
+  /**
+   * Update user profile
+   */
+  const update = async () => {
+    setLoading(true);
+    let avatarUrl;
+    try {
+      if (avatar === customAvatar && file) {
+        const fileUrl = await uploadFiles(
+          file,
+          'images/users/avatar/' + user.username + '.jpg'
+        );
+        avatarUrl = fileUrl;
+      } else {
+        avatarUrl = avatar;
+      }
+      console.log('ava', avatarUrl);
+      const dp = displayName || user.username;
+      const data = { ...user, displayName: dp, avatar: avatarUrl };
+      const res = await axios.put<IUser>('/api/auth/update-profile', data);
+      console.log(res.data);
+      dispatcher({ ...res.data, token: user.token });
+      navigate('/', { replace: true });
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  };
   return (
+    // <div className=" flex flex-col justify-center items-center w-full h-screen">
     <AuthLayout>
-      <Stack spacing={6} alignItems={'center'}>
-        <Avatar size={'2xl'} src={avaSrc} />
+      <Stack spacing={4} alignItems={'center'}>
+        <Avatar size={'2xl'} src={avatar} />
         <HStack>
           <Grid templateColumns={'repeat(5, 1fr)'} gap={5}>
-            {Object.entries(peepsImport).map(([k, v]) => (
-              <GridItem onClick={() => changeAvatar(k, v)}>
+            {avatarList.map((v) => (
+              <GridItem key={v} onClick={() => setAvatar(v)}>
                 <Avatar
                   className="hover:scale-125 cursor-pointer duration-200"
                   size={'lg'}
-                  outline={avatar == k ? 'solid 3px' : '0px'}
+                  outline={avatar == v ? 'solid 3px' : '0px'}
                   outlineColor={'green.400'}
                   outlineOffset={2}
                   src={v}
                 >
-                  {avatar == k && (
+                  {avatar == v && (
                     <AvatarBadge
                       boxSize="1.25em"
                       bg="green.400"
@@ -70,16 +121,16 @@ export default function NewProfile() {
               </GridItem>
             ))}
             {file && (
-              <GridItem onClick={() => changeAvatar('file', file)}>
+              <GridItem onClick={() => setAvatar(customAvatar)}>
                 <Avatar
                   className="hover:scale-125 cursor-pointer duration-200"
                   size={'lg'}
-                  outline={avatar == 'file' ? 'solid 3px' : '0px'}
+                  outline={avatar == customAvatar ? 'solid 3px' : '0px'}
                   outlineColor={'green.400'}
                   outlineOffset={2}
-                  src={file}
+                  src={customAvatar}
                 >
-                  {avatar == 'file' && (
+                  {avatar === customAvatar && (
                     <AvatarBadge
                       boxSize="1.25em"
                       bg="green.400"
@@ -125,19 +176,29 @@ export default function NewProfile() {
             borderColor={'gray.400'}
             borderRadius={'full'}
             type={'text'}
+            maxLength={20}
             name={'displayName'}
-            placeholder={'default using ' + user.user.username}
+            placeholder={'default using ' + user.username}
             value={displayName}
             onChange={(e: any) => setDisplayName(e.target.value)}
           />
         </FormControl>
-        <Button w={'full'} borderRadius={'full'} colorScheme={'twitter'}>
+        <Button
+          onClick={update}
+          w={'full'}
+          isLoading={loading}
+          borderRadius={'full'}
+          colorScheme={'twitter'}
+        >
           Next
         </Button>
-        <Button variant={'link'}>
-          <Link to={'/'}>skip for now</Link>
-        </Button>
+        <Link to={'/'}>
+          <Button rounded={'full'} variant={'link'}>
+            skip for now
+          </Button>
+        </Link>
       </Stack>
     </AuthLayout>
+    // </div>
   );
 }

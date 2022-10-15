@@ -1,10 +1,12 @@
 import { Box, Heading, IconButton, Stack } from '@chakra-ui/react';
 import { FiArrowLeft } from 'react-icons/fi';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 
 export default function ProfileLayout() {
+  const location = useLocation();
+  const header = location.pathname.replace(/\//gi, ' ');
   return (
-    <div>
+    <Stack>
       <Box
         className="backdrop-blur-lg z-20"
         bg={'whiteAlpha.800'}
@@ -21,11 +23,11 @@ export default function ProfileLayout() {
             icon={<FiArrowLeft size={24} />}
           />
           <Heading p={4} size={'md'}>
-            Display Name
+            {header}
           </Heading>
         </Stack>
       </Box>
       <Outlet />
-    </div>
+    </Stack>
   );
 }

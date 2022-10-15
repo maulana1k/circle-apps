@@ -68,6 +68,7 @@ function Signin() {
         position: 'top-right',
       });
       userContext.dispatcher(res.data);
+      localStorage.setItem('user', JSON.stringify(res.data));
       navigate('/', { replace: true });
     } catch (error) {
       if (axios.isAxiosError(error)) {

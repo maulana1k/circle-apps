@@ -1,4 +1,4 @@
-import { Schema, Types, model } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import { IUser } from '@circle-app/api-interfaces';
 
 const UserSchema = new Schema<IUser>({
@@ -7,11 +7,10 @@ const UserSchema = new Schema<IUser>({
   email: { type: String, required: true, unique: true, select: true },
   password: { type: String, required: true },
   avatar: { type: String, default: 'default' },
-  bio: { type: String, default: '' },
   birth: { type: Date },
+  coverImages: { type: String, default: 'default' },
+  bio: { type: String, default: '' },
   verified: { type: Boolean, default: false, select: true },
-  followers: [{ type: String, ref: 'User' }],
-  following: [{ type: String, ref: 'User' }],
 });
 
 const User = model<IUser>('User', UserSchema);

@@ -4,8 +4,9 @@ import jwt from 'jsonwebtoken';
 
 import BaseController from './BaseController';
 import User from '../models/User';
-import { IUser, UserWithToken } from '@circle-app/api-interfaces';
+import { IUser } from '@circle-app/api-interfaces';
 import { body } from 'express-validator';
+import Relation from '../models/Relation';
 
 class AuthController extends BaseController {
   constructor() {
@@ -26,6 +27,7 @@ class AuthController extends BaseController {
       ],
       this.signup
     );
+    this.router.put('/update-profile', this.updateProfile);
   }
   private async signin(req: Request, res: Response): Promise<void> {
     try {
@@ -44,10 +46,11 @@ class AuthController extends BaseController {
         res.status(400).send('Password wrong');
         return;
       }
+      // const userRelation = await Relation.findOne({ user: user.username });
       // generate token
       const secretKey = process.env.JWT_KEY;
       const token = jwt.sign({ email }, secretKey);
-      res.status(200).json({ user, token });
+      res.status(200).json(Object.assign(user.toJSON(), { token }));
     } catch (error) {
       res.status(500).json(error);
     }
@@ -55,8 +58,6 @@ class AuthController extends BaseController {
   private async signup(req: Request, res: Response): Promise<void> {
     try {
       const { username, email, password, birth } = req.body;
-      console.log(req.body);
-
       //check if username is unique
       const isUnique = await User.findOne({ username });
       if (isUnique) {
@@ -80,28 +81,40 @@ class AuthController extends BaseController {
         password: hashedPassword,
       });
       const savedUser = await user.save();
+      /**
+       * Create relation document reference
+       */
+      await new Relation({
+        user: savedUser.username,
+      }).save();
+
       const secretKey = process.env.JWT_KEY;
       const token = jwt.sign({ username }, secretKey);
-      res.json({ token, user: savedUser });
+
+      res.status(200).json(Object.assign(savedUser.toJSON(), { token }));
     } catch (error) {
+      console.log(error);
+
       res.status(500).json(error);
     }
   }
   private async updateProfile(req: Request, res: Response) {
     try {
-      const { username, displayName, email, password, bio }: IUser = req.body;
-      const user = await User.findOneAndUpdate(
-        { username },
+      const { _id, displayName, bio, avatar }: IUser = req.body;
+      console.log(req.body);
+
+      const user = await User.findByIdAndUpdate(
+        _id,
         {
           $set: {
-            username,
-            displayName,
-            email,
-            password,
             bio,
+            displayName,
+            avatar,
           },
-        }
+        },
+        { new: true }
       );
+      res.status(200).json(user);
     } catch (error) {
       res.status(500).json(error);
     }

@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../redux/store';
 
 const initialState: UserWithToken = {
-  user: JSON.parse(localStorage.getItem('user') || ''),
+  ...JSON.parse(localStorage.getItem('user') || '{}'),
   token: localStorage.getItem('token') || '',
 };
 
