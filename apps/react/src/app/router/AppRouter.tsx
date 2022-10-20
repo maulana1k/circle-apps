@@ -31,7 +31,7 @@ export default function AppRouter() {
       <Route path="/signup" element={<Signup />} />
       <Route path="/signup/new-profile" element={<NewProfile />} />
       <Route path="/signin" element={<Signin />} />
-      <Route path="/forgot-password" element={<ForgotPassword />} />
+      {/* <Route path="/forgot-password" element={<ForgotPassword />} /> */}
     </Routes>
   );
 }
