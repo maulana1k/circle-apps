@@ -1,0 +1,29 @@
+{
+    "buildCommand":"yarn build",
+    "devCommand" : "yarn dev",
+    "installCommand":"yarn install",
+    "functions":{
+        "dist/apps/api/main.js":{
+            "memory":1024
+        }
+    },
+    "builds":[
+        {
+            "src":"dist/apps/api/main.js",
+            "use":"@vercel/node",
+            "config":{"includeFiles":["dist/apps/api/**"]}
+        },
+        {
+            "src":"dist/apps/react/**",
+            "use":"@vercel/static",
+            "config":{"includeFiles":["dist/apps/react/**"]}
+
+        }
+    ],
+    "routes":[
+        {
+            "src":"/(.*)",
+            "dest":"dist/apps/api/main.js"
+        }
+    ]
+}
