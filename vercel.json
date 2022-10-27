@@ -3,11 +3,6 @@
     "devCommand" : "yarn dev",
     "installCommand":"yarn install",
     "outputDirectory":"dist",
-    "functions":{
-        "dist/apps/api/main.js":{
-            "memory":1024
-        }
-    },
     "builds":[
         {
             "src":"./dist/apps/api/main.js",
