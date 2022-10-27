@@ -15,7 +15,7 @@ import * as dotenv from 'dotenv'
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT;
+const port = process.env.PORT || 8080;
 // const dbURI = process.env.NX_DB_URI;
 const dbURI = 'mongodb://tweet:circletweet@ac-ffppojj-shard-00-00.7hfkjqd.mongodb.net:27017,ac-ffppojj-shard-00-01.7hfkjqd.mongodb.net:27017,ac-ffppojj-shard-00-02.7hfkjqd.mongodb.net:27017/main-dev?ssl=true&replicaSet=atlas-x6t3cc-shard-0&authSource=admin&retryWrites=true&w=majority';
 const server = new Server(port, app);
