@@ -3,9 +3,15 @@
     "devCommand" : "yarn dev",
     "installCommand":"yarn install",
     "outputDirectory":"dist",
+    "builds":[
+        {
+            "src":"./dist/apps/main.js",
+            "use":"@vercel/node"
+        }
+    ],
     "routes":[
         {
-            "src":"/.*",
+            "src":"/(.*)",
             "dest":"dist/apps/api/main.js"
         }
     ]
