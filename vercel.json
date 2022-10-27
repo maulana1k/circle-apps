@@ -1,0 +1,12 @@
+{
+    "buildCommand":"yarn build",
+    "devCommand" : "yarn dev",
+    "installCommand":"yarn install",
+    "outputDirectory":"dist",
+    "routes":[
+        {
+            "src":"/.*",
+            "dest":"dist/apps/api/main.js"
+        }
+    ]
+}
