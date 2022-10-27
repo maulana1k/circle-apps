@@ -5,14 +5,14 @@
     "outputDirectory":"dist",
     "builds":[
         {
-            "src":"./dist/apps/main.js",
+            "src":"./dist/apps/api/main.js",
             "use":"@vercel/node"
         }
     ],
     "routes":[
         {
             "src":"/(.*)",
-            "dest":"dist/apps/api/main.js"
+            "dest":"/dist/apps/api/main.js"
         }
     ]
 }
