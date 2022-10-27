@@ -9,11 +9,18 @@ import path from 'path';
 import TweetController from './app/controller/TweetController';
 import bodyParser from 'body-parser';
 import UsersController from './app/controller/UsersController';
+import * as dotenv from 'dotenv'
+/**
+ * Call dotenv to load environtment variable from .env file
+ */
+dotenv.config();
 
 const app = express();
-const port = process.env.PORT;
-const dbURI = process.env.DB_URI;
+const port = process.env.NX_PORT;
+const dbURI = process.env.NX_DB_URI;
 const server = new Server(port, app);
+const CLIENT_PATH = path.join(__dirname,'..' ,'/react');
+const ASSETS_PATH = path.join(__dirname, '/assets');
 /**
  * CORS configuration
  */
@@ -26,14 +33,19 @@ const corsOptions = {
  */
 server.setDatabaseUri(dbURI);
 /**
+ * Set frontend build path to index.html (if any)
+ */
+server.setClientPath(path.join(CLIENT_PATH,'index.html'));
+/**
  * always load global middlewares before load any controllers
  */
 server.loadGlobalMiddleware([
   cors(corsOptions),
-  helmet(),
+  // helmet(),
   morgan('dev'),
   bodyParser.urlencoded({ extended: true }),
-  express.static(path.join(__dirname, '/assets')),
+  express.static(ASSETS_PATH),
+  express.static(CLIENT_PATH),
   express.json(),
 ]);
 /**
@@ -49,6 +61,6 @@ server.loadController([
  */
 export default server.app;
 /**
- *  STARTS THE ENGINE
+ *  ⚡⚡⚡ RUN THE SERVER ⚡⚡⚡
  */
 server.run();

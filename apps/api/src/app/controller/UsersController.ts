@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import mongoose from 'mongoose';
 import authMiddleware from '../middlewares/auth.middleware';
 import Relation from '../models/Relation';
 import Tweet from '../models/Tweet';

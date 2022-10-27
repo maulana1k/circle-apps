@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { query, validationResult } from 'express-validator';
 
+import authMiddleware from '../middlewares/auth.middleware';
 import Tweet from '../models/Tweet';
 import { response_bad_request, response_success } from '../utils/responses';
 import BaseController from './BaseController';
@@ -9,9 +10,13 @@ export default class TweetController extends BaseController {
   constructor() {
     super();
     this.basePath = '/tweet';
-    this.router.use((req, res, next) => {
-      next();
-    });
+    /**
+     * Local middleware
+     */
+    // this.router.use(authMiddleware);
+    /**
+     * Routes mapping
+     */
     this.router.get(
       '/',
       [query('size').toInt(), query('offset').toInt()],

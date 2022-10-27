@@ -13,7 +13,7 @@ export default function authMiddleware(
   }
   jwt.verify(
     authorization.split(' ')[1],
-    process.env['JWT_KEY'],
+    process.env['NX_JWT_KEY'],
     { complete: true },
     (err, decoded) => {
       if (err) return res.status(401).json('Authorization token invalid');

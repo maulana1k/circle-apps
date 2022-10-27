@@ -48,7 +48,7 @@ class AuthController extends BaseController {
       }
       // const userRelation = await Relation.findOne({ user: user.username });
       // generate token
-      const secretKey = process.env.JWT_KEY;
+      const secretKey = process.env.NX_JWT_KEY;
       const token = jwt.sign({ email }, secretKey);
       res.status(200).json(Object.assign(user.toJSON(), { token }));
     } catch (error) {
@@ -88,7 +88,7 @@ class AuthController extends BaseController {
         user: savedUser.username,
       }).save();
 
-      const secretKey = process.env.JWT_KEY;
+      const secretKey = process.env.NX_JWT_KEY;
       const token = jwt.sign({ username }, secretKey);
 
       res.status(200).json(Object.assign(savedUser.toJSON(), { token }));

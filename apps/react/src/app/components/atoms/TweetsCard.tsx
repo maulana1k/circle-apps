@@ -5,7 +5,6 @@ import {
   Flex,
   Stack,
   Text,
-  useDisclosure,
   Center,
 } from '@chakra-ui/react';
 import { ITweet } from '@circle-app/api-interfaces';
@@ -18,7 +17,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { UserContext, UserContextType } from '../../context/user.context';
 
 import { ActionButton } from './ActionButton';
-import TweetModal from './TweetModal';
+
 
 export const LikeButton = (props: {
   count: number;
@@ -88,12 +87,10 @@ export default function TweetsCard({
   toReply,
 }: ITweetCard) {
   const { user } = useContext(UserContext) as UserContextType;
-  const { isOpen, onClose, onOpen } = useDisclosure();
   const navigate = useNavigate();
   const [isLiked, setIsLiked] = useState(tweet.likes.includes(user._id));
   const [likeCount, setLikeCount] = useState(tweet.likes.length);
   const [repliesCount, setRepliesCount] = useState(0);
-  console.log(isLiked);
 
   const visitTweet = (e: any) => {
     e.stopPropagation();

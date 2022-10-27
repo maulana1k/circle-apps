@@ -6,6 +6,7 @@ class Server {
   private port: number | string;
   public app: Application;
   private dbUri: string;
+  private clientPath : string;
   private apiPrefix: string = '/api';
   constructor(port: number | string, app: Application) {
     this.port = port;
@@ -13,6 +14,9 @@ class Server {
   }
   public setDatabaseUri(uri: string) {
     this.dbUri = uri;
+  }
+  public setClientPath(path: string) {
+    this.clientPath = path;
   }
   async run() {
     try {
@@ -36,9 +40,14 @@ class Server {
     controllers.forEach((controller) => {
       controller.connectRouter(this.app, this.apiPrefix);
     });
-    // this.app.use('/', (req, res) => {
-    //   res.send('React api v0.1');
-    // });
+    /**
+     * Serve frontend build app
+     */
+    if(this.clientPath) {
+      this.app.get('*', (req, res) => {
+        res.sendFile(this.clientPath);
+      });
+    }
   }
 }
 

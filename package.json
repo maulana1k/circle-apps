@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node dist/apps/api/main.js",
     "dev": "nx run-many --target=serve --all ",
-    "build": "nx build",
+    "build": "nx run-many --target=build --all ",
     "test": "nx test"
   },
   "private": true,
@@ -20,6 +20,7 @@
     "chakra-ui-autocomplete": "^1.4.5",
     "core-js": "^3.6.5",
     "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
     "express": "4.17.2",
     "express-validator": "^6.14.2",
     "firebase": "^9.9.2",
@@ -53,6 +54,7 @@
     "@nrwl/workspace": "14.4.3",
     "@testing-library/react": "13.3.0",
     "@types/bcrypt": "^5.0.0",
+    "@types/dotenv": "^8.2.0",
     "@types/express": "4.17.13",
     "@types/jest": "27.4.1",
     "@types/jsonwebtoken": "^8.5.8",

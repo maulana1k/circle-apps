@@ -13,12 +13,11 @@ import {
   Center,
 } from '@chakra-ui/react';
 import { FiCheck, FiImage } from 'react-icons/fi';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { UserContext, UserContextType } from '../../context/user.context';
 import AuthLayout from './AuthLayout';
-import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
 import axios from 'axios';
 import { IUser } from '@circle-app/api-interfaces';
 import { uploadFiles } from '../../hooks/useFirebase';
@@ -44,15 +43,6 @@ export default function NewProfile() {
     'https://firebasestorage.googleapis.com/v0/b/nx-app-bcf16.appspot.com/o/images%2Fdefault-avatar%2Fpeep-8.png?alt=media&token=6390d582-9383-45d7-9823-e6c797c86aa5',
   ]);
   const navigate = useNavigate();
-  // useEffect(() => {
-  //   (async () => {
-  //     const urlList = await getAllFiles('/images/default-avatar');
-  //     setAvatarList(urlList);
-  //   })();
-  // }, []);
-  /**
-   * File upload handler
-   */
   const fileHandle = (e: any) => {
     if (e.target.files[0].size > 2 * 1024 * 1024) {
       alert('Image size too large!');

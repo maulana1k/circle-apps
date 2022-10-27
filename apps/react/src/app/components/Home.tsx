@@ -48,7 +48,6 @@ export const TweetField = (props: {
   const { user } = useContext(UserContext) as UserContextType;
   const [tweetContent, setTweetContent] = useState<string>('');
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
   const inputHandle = (e: any) => {
     const input = e.target.value;
@@ -145,7 +144,6 @@ export const TweetField = (props: {
 export default function Home() {
   const [tweets, setTweets] = useState<ITweet[]>([]);
   const [refresh, setRefresh] = useState(false);
-  // console.log(tweets);
 
   useEffect(() => {
     (async () => {
@@ -174,7 +172,7 @@ export default function Home() {
         <Divider />
         <Stack divider={<Divider />} spacing={0}>
           {tweets.map((item: ITweet) => (
-            <TweetsCard tweet={item} />
+            <TweetsCard key={item._id} tweet={item} />
           ))}
         </Stack>
       </Stack>

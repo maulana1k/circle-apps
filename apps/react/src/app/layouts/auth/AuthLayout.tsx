@@ -1,4 +1,4 @@
-import { Box, Center, Heading, Text } from '@chakra-ui/react';
+import { Box, Heading, Text } from '@chakra-ui/react';
 import { ReactNode } from 'react';
 import HeroImg from '../../../assets/img/peeps.png';
 
