@@ -1,4 +1,4 @@
-import { Types, Document, Date as MongooseDate } from 'mongoose';
+import { Types, Document } from 'mongoose';
 export interface ResponseApi<T> {
   err: string;
   message: string;
@@ -6,12 +6,12 @@ export interface ResponseApi<T> {
 }
 
 export interface IRelation {
-  user: String;
+  user: string;
   followers: Types.Array<Types.ObjectId>;
   followings: Types.Array<Types.ObjectId>;
 }
 export interface IRelationJoin {
-  user: String;
+  user: string;
   followers: Array<IUser>;
   followings: Array<IUser>;
 }
@@ -33,8 +33,8 @@ export interface UserWithToken extends IUser {
 
 export interface ITweet extends Pick<Document, '_id'> {
   author: IUser;
-  content: String;
-  attachment?: String;
+  content: string;
+  image?: string;
   likes: Types.Array<Types.ObjectId>;
   replyTo: { type: Types.ObjectId; ref: 'Tweet' };
   timestamp: Date;

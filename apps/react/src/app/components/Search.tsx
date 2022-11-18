@@ -9,7 +9,7 @@ import { IUser } from '@circle-app/api-interfaces';
 import axios from 'axios';
 import React, { useContext, useState } from 'react';
 import { FiSearch } from 'react-icons/fi';
-import { TwitterTweetEmbed } from 'react-twitter-embed';
+import { TwitterTweetEmbed, TwitterTimelineEmbed } from 'react-twitter-embed';
 import { UserContext, UserContextType } from '../context/user.context';
 import UserList from './atoms/UserList';
 
@@ -39,7 +39,7 @@ export default function Search() {
             borderRadius={'full'}
             variant={'filled'}
             width="full"
-            placeholder="Search..."
+            placeholder="Search on Circle"
             onInput={handleSearch}
           />
         </InputGroup>
@@ -54,9 +54,10 @@ export default function Search() {
         )}
         <Stack overflowY={'scroll'} h={'full'}>
           <Box p={4} rounded={'2xl'} bg={'gray.100'}>
-            <TwitterTweetEmbed tweetId="1570560060698558469" />
-            <TwitterTweetEmbed tweetId="1550658458843639808" />
-            <TwitterTweetEmbed tweetId="1548608447469432832" />
+            {/* <TwitterTweetEmbed tweetId="1570560060698558469" /> */}
+            {/* <TwitterTweetEmbed tweetId="1550658458843639808" />
+            <TwitterTweetEmbed tweetId="1548608447469432832" /> */}
+            <TwitterTimelineEmbed sourceType='profile' screenName={'FiersaBesari'} />
           </Box>
         </Stack>
       </Stack>

@@ -6,12 +6,14 @@ import {
   Stack,
   Text,
   Center,
+  Image,
+  IconButton,
 } from '@chakra-ui/react';
 import { ITweet } from '@circle-app/api-interfaces';
 import axios from 'axios';
 import moment from 'moment';
 import { ReactNode, useContext, useState, useEffect } from 'react';
-import { FiMessageCircle, FiShare } from 'react-icons/fi';
+import { FiMessageCircle, FiMoreVertical, FiShare } from 'react-icons/fi';
 import { IoHeart, IoHeartOutline } from 'react-icons/io5';
 import { Link, useNavigate } from 'react-router-dom';
 import { UserContext, UserContextType } from '../../context/user.context';
@@ -78,6 +80,7 @@ interface ITweetCard {
   hasPrev?: boolean;
   hasNext?: boolean;
   toReply?: boolean;
+  self?: boolean;
 }
 
 export default function TweetsCard({
@@ -85,6 +88,7 @@ export default function TweetsCard({
   hasPrev,
   hasNext,
   toReply,
+  self
 }: ITweetCard) {
   const { user } = useContext(UserContext) as UserContextType;
   const navigate = useNavigate();
@@ -94,7 +98,6 @@ export default function TweetsCard({
 
   const visitTweet = (e: any) => {
     e.stopPropagation();
-
     return navigate('/' + tweet.author.username + '/tweet/' + tweet._id, {
       state: tweet._id,
     });
@@ -107,11 +110,8 @@ export default function TweetsCard({
       .post('/api/tweet/' + tweet._id + action + user._id)
       .then(() => {
         setIsLiked(!isLiked);
-        if (isLiked) {
-          setLikeCount(likeCount - 1);
-        } else {
-          setLikeCount(likeCount + 1);
-        }
+        if (isLiked) setLikeCount(likeCount - 1);
+        else setLikeCount(likeCount + 1);
       })
       .catch((err) => console.log(err));
   };
@@ -124,12 +124,14 @@ export default function TweetsCard({
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, [tweet._id]);
   return (
     <Box
       bg={'white'}
+      transition={'ease-in-out'}
+      transitionProperty={'all'}
       _hover={{ background: 'gray.50' }}
-      px={3}
+      px={5}
       cursor={'pointer'}
     >
       <HStack alignItems={'stretch'} direction={'row'} spacing={3}>
@@ -142,17 +144,25 @@ export default function TweetsCard({
             <Avatar src={tweet.author.avatar} mt={3} />
           )}
         </Link>
-        <Stack onClick={(e: any) => visitTweet(e)} py={3} spacing={2}>
-          <Stack alignItems={'center'} direction={'row'}>
-            <Text fontWeight={'bold'}>{tweet.author.displayName}</Text>
-            <Text fontSize={'sm'} color={'gray.500'}>
-              @{tweet.author.username}
-            </Text>
-            <Text color={'gray.500'} fontSize={'sm'}>
-              &middot; {moment(tweet.timestamp.toString()).fromNow()}
-            </Text>
-          </Stack>
+        <Stack w={'full'} onClick={(e: any) => visitTweet(e)} py={3} spacing={0}>
+          <HStack justify={'space-between'}  >
+            <Link to={'/' + tweet.author.username}>
+              <Stack alignItems={'center'} direction={'row'}>
+                <Text fontWeight={'bold'}>{tweet.author.displayName}</Text>
+                <Text fontSize={'sm'} color={'gray.500'}>
+                  @{tweet.author.username}
+                </Text>
+                <Text color={'gray.500'} fontSize={'sm'}>
+                  &middot; {moment(tweet.timestamp.toString()).fromNow()}
+                </Text>
+              </Stack>
+            </Link>
+            {
+              self && <IconButton aria-label='more' size={'sm'} variant={'ghost'} icon={<FiMoreVertical />} />
+            }
+          </HStack>
           <Text whiteSpace={'pre-wrap'}>{tweet.content}</Text>
+          <Image borderRadius={'xl'} src={tweet.image} />
           {!toReply ? (
             <Stack spacing={6} direction={'row'} alignItems={'center'} pt={2}>
               <LikeButton

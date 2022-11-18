@@ -12,7 +12,7 @@ export default function MainLayout(props: { children?: ReactNode }) {
   }
   return (
     <div style={{ background: '282B30' }} className=" h-screen w-full flex">
-      <Container px={10} display={'flex'} maxW={'container.2xl'}>
+      <Container px={0} display={'flex'} maxW={'container.2xl'}>
         <SideNavigation />
         <div className="relative border-r w-1/2">
           <Outlet />

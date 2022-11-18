@@ -4,9 +4,11 @@ import { ReactElement } from 'react';
 export default function CustomButton(props: {
   icon: ReactElement;
   size?: string;
+  onClick?: (x: any) => void;
 }) {
   return (
     <IconButton
+      onClick={props.onClick}
       variant={'ghost'}
       colorScheme={'twitter'}
       rounded={'full'}

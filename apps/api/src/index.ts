@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
+// import functions from 'firebase-functions';
 
 import Server from './app/Server';
 import AuthController from './app/controller/AuthController';
@@ -16,10 +17,10 @@ dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 8080;
-// const dbURI = process.env.NX_DB_URI;
-const dbURI = 'mongodb://tweet:circletweet@ac-ffppojj-shard-00-00.7hfkjqd.mongodb.net:27017,ac-ffppojj-shard-00-01.7hfkjqd.mongodb.net:27017,ac-ffppojj-shard-00-02.7hfkjqd.mongodb.net:27017/main-dev?ssl=true&replicaSet=atlas-x6t3cc-shard-0&authSource=admin&retryWrites=true&w=majority';
+const dbURI = process.env.NX_DB_URI;
+// const dbURI = 'mongodb://tweet:circletweet@ac-ffppojj-shard-00-00.7hfkjqd.mongodb.net:27017,ac-ffppojj-shard-00-01.7hfkjqd.mongodb.net:27017,ac-ffppojj-shard-00-02.7hfkjqd.mongodb.net:27017/main-dev?ssl=true&replicaSet=atlas-x6t3cc-shard-0&authSource=admin&retryWrites=true&w=majority';
 const server = new Server(port, app);
-const CLIENT_PATH = path.join(__dirname,'..' ,'/react');
+const CLIENT_PATH = path.join(__dirname, '..', '/react');
 const ASSETS_PATH = path.join(__dirname, '/assets');
 /**
  * CORS configuration
@@ -35,7 +36,7 @@ server.setDatabaseUri(dbURI);
 /**
  * Set frontend build path to index.html (if any)
  */
-server.setClientPath(path.join(CLIENT_PATH,'index.html'));
+server.setClientPath(path.join(CLIENT_PATH, 'index.html'));
 /**
  * always load global middlewares before load any controllers
  */
@@ -57,10 +58,11 @@ server.loadController([
   new UsersController(),
 ]);
 /**
- * export app for testing usage
- */
-export default server.app;
-/**
  *  ⚡⚡⚡ RUN THE SERVER ⚡⚡⚡
  */
 server.run();
+/**
+ * export app for testing usage
+ */
+// exports.app = functions.https.onRequest(server.app);
+// export default server.app;

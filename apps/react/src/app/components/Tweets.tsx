@@ -1,19 +1,16 @@
 import {
-  Avatar,
   Box,
-  Text,
   Heading,
   HStack,
   IconButton,
   Stack,
-  ButtonGroup,
   Divider,
 } from '@chakra-ui/react';
 import { ITweet } from '@circle-app/api-interfaces';
 import axios from 'axios';
 import { ReactNode, useState, useEffect } from 'react';
 import { FiArrowLeft } from 'react-icons/fi';
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import TweetsCard from './atoms/TweetsCard';
 import TweetVisited from './atoms/TweetVisited';
 
@@ -27,7 +24,7 @@ export default function Tweets() {
   const [tweet, setTweet] = useState<ITweet>();
   const [replies, setReplies] = useState<ITweet[]>([]);
   const location = useLocation();
-  console.log(replies);
+  // console.log(replies);
 
   useEffect(() => {
     (async () => {
@@ -44,7 +41,7 @@ export default function Tweets() {
           console.log(err);
         });
     })();
-  }, [location.pathname]);
+  }, [location.pathname, location.state]);
   return (
     <>
       <Box

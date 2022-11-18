@@ -6,7 +6,7 @@ import {
   ModalOverlay,
 } from '@chakra-ui/react';
 import { ITweet } from '@circle-app/api-interfaces';
-import { TweetField } from '../Home';
+import { TweetField } from "../TweetField";
 import TweetsCard from './TweetsCard';
 
 export default function TweetModal(props: {

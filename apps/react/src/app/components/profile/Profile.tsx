@@ -13,10 +13,10 @@ import {
   Image,
   HStack,
   Spinner,
-  Container,
   TabPanels,
   TabPanel,
   Divider,
+  useDisclosure,
 } from '@chakra-ui/react';
 import {
   IRelationJoin,
@@ -30,7 +30,7 @@ import { IoBalloon } from 'react-icons/io5';
 import { Link, useLocation } from 'react-router-dom';
 import { UserContext, UserContextType } from '../../context/user.context';
 import TweetsCard from '../atoms/TweetsCard';
-import ProfileLayout from './ProfileLayout';
+import UpdateProfile from './UpdateProfile';
 
 export default function Profile() {
   /**
@@ -49,32 +49,18 @@ export default function Profile() {
   );
   const [userRelation, setUserRealtion] = useState<IRelationJoin | null>(null);
   const [tweets, setTweets] = useState<ITweet[]>();
-
   const [isFollowing, setIsFollowing] = useState(false);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const getUserData = async () => {
-    const userData = await axios.get<UserWithToken>(
-      '/api/users' + location.pathname,
-      { headers: { authorization: 'Bearer ' + user.token } }
-    );
-    setProfileData(userData.data);
-  };
   const getUserRelations = async () => {
     const relations = await axios.get<IRelationJoin>(
       '/api/users/' + location.pathname + '/relations',
       { headers: { authorization: 'Bearer ' + user.token } }
     );
     setUserRealtion(relations.data);
-    if (!!relations.data.followers.filter((u) => u._id === user._id).length) {
+    if (relations.data.followers.filter((u) => u._id === user._id).length) {
       setIsFollowing(true);
     }
-  };
-  const getUserTweets = async () => {
-    const tweets = await axios.get('/api/tweet/users/' + profileData?._id, {
-      headers: { authorization: 'Bearer ' + user.token },
-    });
-
-    setTweets(tweets.data);
   };
   useEffect(() => {
     (async () => {
@@ -93,18 +79,12 @@ export default function Profile() {
             headers: { authorization: 'Bearer ' + user.token },
           }
         );
-
         setProfileData(userData.data);
         setUserRealtion(relations.data);
-        if (
-          !!relations.data.followers.filter((u) => u._id === user._id).length
-        ) {
+        if (relations.data.followers.filter((u) => u._id === user._id).length) {
           setIsFollowing(true);
         }
         setTweets(tweets.data);
-        // getUserData()
-        //   .then(() => getUserRelations())
-        //   .then(() => getUserTweets());
         console.log(userData.data);
       } catch (error) {
         console.log(error);
@@ -141,9 +121,9 @@ export default function Profile() {
     );
   }
   return (
-    <Stack spacing={6} pt={14}>
-      <Stack spacing={-16}>
-        {!!user.coverImages ? (
+    <Stack spacing={6} pt={12} overflowY={'scroll'} h={'100vh'} w={'full'}  >
+      <Stack spacing={-16}  >
+        {user.coverImages ? (
           <Box h={40} w={'full'} bg={'twitter.500'}></Box>
         ) : (
           <Image src={profileData.coverImages} />
@@ -159,6 +139,7 @@ export default function Profile() {
               size={'2xl'}
               src={profileData.avatar}
             />
+            <UpdateProfile profile={profileData} isOpen={isOpen} onClose={onClose} />
             <ButtonGroup>
               {user.username !== profileData.username ? (
                 <>
@@ -173,7 +154,6 @@ export default function Profile() {
                       onClick={followHandle}
                       variant={'outline'}
                       rounded={'full'}
-                      // colorScheme={'twitter'}
                     >
                       Unfollow
                     </Button>
@@ -188,7 +168,8 @@ export default function Profile() {
                   )}
                 </>
               ) : (
-                <Button rounded={'full'} variant={'outline'}>
+
+                <Button onClick={onOpen} rounded={'full'} variant={'outline'}>
                   Edit Profile
                 </Button>
               )}
@@ -201,7 +182,6 @@ export default function Profile() {
           <Heading size={'md'}>{profileData.displayName}</Heading>
           <Text color={'gray.500'}>@{profileData.username}</Text>
         </Stack>
-
         <Text>{profileData.bio}</Text>
         <HStack color={'gray.500'}>
           <IoBalloon />
@@ -239,7 +219,7 @@ export default function Profile() {
         <TabPanels>
           <TabPanel>
             <Stack divider={<Divider />} spacing={0} w={'full'}>
-              {tweets && tweets.map((tweet) => <TweetsCard tweet={tweet} />)}
+              {tweets && tweets.map((tweet) => <TweetsCard self tweet={tweet} />)}
             </Stack>
           </TabPanel>
         </TabPanels>

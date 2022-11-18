@@ -49,15 +49,18 @@ export default class TweetController extends BaseController {
     try {
       const err = validationResult(req);
       if (!err.isEmpty()) return response_bad_request(res, err);
-      const { userId, content } = req.body;
+      const { author, content, image } = req.body;
       const tweet = new Tweet({
-        author: userId,
+        author,
         content,
+        image,
         timestamp: Date.now(),
       });
       const saved = await tweet.save();
       return response_success(res, saved);
-    } catch (error) {}
+    } catch (error) {
+      res.status(500).json(error);
+    }
   }
   private async details(req: Request, res: Response) {
     try {
@@ -162,7 +165,7 @@ export default class TweetController extends BaseController {
         displayName: 1,
         username: 1,
         avatar: 1,
-      });
+      }).sort({ timestamp: -1 });
       res.status(200).json(tweets);
     } catch (error) {
       res.status(500).json(error);
@@ -175,6 +178,8 @@ export default class TweetController extends BaseController {
         .populate('likes')
         .select({ likes: 1, _id: 0 });
       return response_success(res, tweet);
-    } catch (error) {}
+    } catch (error) {
+      res.status(500).json(error);
+    }
   }
 }

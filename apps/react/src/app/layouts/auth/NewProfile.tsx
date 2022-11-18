@@ -32,7 +32,7 @@ export default function NewProfile() {
   const [customAvatar, setCustomAvatar] = useState<string>('');
   const [file, setFile] = useState<Blob>();
   const [loading, setLoading] = useState<boolean>(false);
-  const [avatarList, setAvatarList] = useState<string[]>([
+  const [avatarList] = useState<string[]>([
     'https://firebasestorage.googleapis.com/v0/b/nx-app-bcf16.appspot.com/o/images%2Fdefault-avatar%2Fpeep-1.png?alt=media&token=c61c6266-18b2-4a6f-8be7-ac115fbb6dbc',
     'https://firebasestorage.googleapis.com/v0/b/nx-app-bcf16.appspot.com/o/images%2Fdefault-avatar%2Fpeep-2.png?alt=media&token=615791f5-6f44-435d-8b3f-ffa6b0147dea',
     'https://firebasestorage.googleapis.com/v0/b/nx-app-bcf16.appspot.com/o/images%2Fdefault-avatar%2Fpeep-3.png?alt=media&token=de03119f-38d6-42f4-989a-0b7bb6119de7',

@@ -7,6 +7,7 @@ import {
   Button,
   Divider,
   useDisclosure,
+  Image,
 } from '@chakra-ui/react';
 import { ITweet } from '@circle-app/api-interfaces';
 import axios from 'axios';
@@ -22,7 +23,7 @@ export default function TweetVisited({ tweet }: { tweet: ITweet }) {
   const [isLiked, setIsLiked] = useState(tweet.likes.includes(user._id));
   const [likeCount, setLikeCount] = useState(tweet.likes.length);
   const { isOpen, onClose, onOpen } = useDisclosure();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   // console.log(isLiked);
 
   const likeTweet = async (e: any) => {
@@ -49,14 +50,17 @@ export default function TweetVisited({ tweet }: { tweet: ITweet }) {
           <Stack spacing={0}>
             <Text fontWeight={'bold'}>{tweet.author.displayName}</Text>
             <Text color={'gray.500'}>
-              @{tweet.author.username} &middot;&nbsp;
-              <Button variant={'link'} colorScheme={'twitter'}>
+              @{tweet.author.username}
+              {/* <Button variant={'link'} colorScheme={'twitter'}>
                 Follow
-              </Button>
+              </Button> */}
             </Text>
           </Stack>
         </HStack>
         <Text whiteSpace={'pre-wrap'}>{tweet.content}</Text>
+        {
+          tweet.image && <Image src={tweet.image} borderRadius={'xl'} />
+        }
         <Text fontWeight={400} color={'gray.500'} fontSize={'sm'}>
           {moment(tweet.timestamp.toString()).format('MMMM Do YYYY, h:mm:ss a')}
         </Text>

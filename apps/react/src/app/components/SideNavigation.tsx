@@ -40,7 +40,7 @@ const MenuNavButton = (props: {
       leftIcon={<props.icon size={26} />}
       iconSpacing={6}
     >
-      <Text fontWeight={props.isActive ? 700 : 400} fontSize={'lg'}>
+      <Text fontWeight={props.isActive ? 800 : 400} fontSize={'xl'}>
         {props.children}
       </Text>
     </Button>
@@ -73,11 +73,11 @@ export default function SideNavigation() {
       <Stack w={'full'} px={6} justifyContent="space-between">
         <Stack spacing={6}>
           <Heading
-            className="font-extrabold text-transparent text-8xl bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 poppins"
+            className="font-extrabold text-transparent text-8xl bg-clip-text bg-gradient-to-r from-blue-400 to-violet-400 poppins"
             style={{ fontFamily: `'Poppins',sans-serif` }}
             px={6}
           >
-            Circle.
+            Unsoedfess
           </Heading>
           <Stack spacing={3} alignItems={'start'}>
             {Object.entries(menuIconMap).map(([menu, { icon, path }]) => (
@@ -113,9 +113,9 @@ export default function SideNavigation() {
             <MenuButton>
               <Stack spacing={4} alignItems={'center'} direction={'row'}>
                 <Avatar size={'md'} src={user.avatar} />
-                <Stack spacing={0}>
-                  <Text fontWeight={600}>{user.displayName}</Text>
-                  <Text color={'gray.500'} fontWeight={400}>
+                <Stack align={'start'} spacing={0}>
+                  <Text fontSize={'sm'} fontWeight={600}>{user.displayName}</Text>
+                  <Text fontSize={'sm'} color={'gray.500'} fontWeight={400}>
                     @{user.username}
                   </Text>
                 </Stack>
