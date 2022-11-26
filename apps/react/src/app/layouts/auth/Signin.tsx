@@ -130,7 +130,7 @@ function Signin() {
                 </InputGroup>
               </FormControl>
               <HStack justify={'space-between'}>
-                <Checkbox>Remember me?</Checkbox>
+                <Checkbox isChecked >Remember me?</Checkbox>
                 {/* <Link to={'/forgot-password'}>
                   <Text color="twitter.500">Forgot password</Text>
                 </Link> */}

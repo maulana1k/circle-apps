@@ -107,7 +107,7 @@ export default class UsersController extends BaseController {
       await Relation.findOneAndUpdate(
         { user: username },
         {
-          $unset: {
+          $pull: {
             followers: userId,
           },
         },
@@ -117,7 +117,7 @@ export default class UsersController extends BaseController {
       await Relation.findOneAndUpdate(
         { user: followerUsername },
         {
-          $unset: {
+          $pull: {
             followings: targetId._id,
           },
         },

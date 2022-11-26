@@ -6,10 +6,10 @@
     "build": {
       "executor": "@nrwl/node:webpack",
       "outputs": [
-        "dist/apps/react/api/index.js"
+        "api"
       ],
       "options": {
-        "outputPath": "dist/apps/react/api/index.js",
+        "outputPath": "api",
         "main": "apps/api/src/index.ts",
         "tsConfig": "apps/api/tsconfig.app.json",
         "assets": [

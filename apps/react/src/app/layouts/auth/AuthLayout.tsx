@@ -8,7 +8,7 @@ export default function AuthLayout(props: { children: ReactNode }) {
       <div
         style={{
           backgroundImage: `url('${HeroImg}')`,
-          backgroundSize: '120vh',
+          backgroundSize: '110vh',
           backgroundPosition: 'bottom',
           backgroundRepeat: 'no-repeat',
         }}
@@ -23,7 +23,7 @@ export default function AuthLayout(props: { children: ReactNode }) {
               }
             >
               {' '}
-              <b> Circle.</b>
+              <b> Unsoedfess</b>
             </Text>
           </Heading>
         </Box>

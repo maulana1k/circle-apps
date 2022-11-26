@@ -54,7 +54,7 @@ export default function Home() {
   return (
     <>
       <Box
-        className="backdrop-blur z-40"
+        className="backdrop-blur-sm z-40"
         bg={'whiteAlpha.800'}
         w={'full'}
         position={'absolute'}

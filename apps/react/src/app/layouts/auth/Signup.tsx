@@ -149,10 +149,9 @@ export default function Signup() {
                   </InputRightElement>
                 </InputGroup>
               </FormControl>
-              <Checkbox checked>
+              <Checkbox isChecked>
                 By signing up i agree to the privacy policy and terms of service
               </Checkbox>
-
               <Button
                 borderRadius={'full'}
                 colorScheme={'twitter'}
