@@ -47,6 +47,8 @@ export default function Profile() {
   const [profileData, setProfileData] = useState<UserWithToken | null>(
     isCurrentProfile ? user : null
   );
+  console.log(profileData);
+
   const [userRelation, setUserRealtion] = useState<IRelationJoin | null>(null);
   const [tweets, setTweets] = useState<ITweet[]>();
   const [isFollowing, setIsFollowing] = useState(false);
@@ -217,7 +219,7 @@ export default function Profile() {
           <Tab>Likes</Tab>
         </TabList>
         <TabPanels>
-          <TabPanel>
+          <TabPanel padding={0} >
             <Stack divider={<Divider />} spacing={0} w={'full'}>
               {tweets && tweets.map((tweet) => <TweetsCard self tweet={tweet} />)}
             </Stack>

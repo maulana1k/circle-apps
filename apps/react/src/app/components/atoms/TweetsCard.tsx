@@ -8,12 +8,16 @@ import {
   Center,
   Image,
   IconButton,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
 } from '@chakra-ui/react';
 import { ITweet } from '@circle-app/api-interfaces';
 import axios from 'axios';
 import moment from 'moment';
 import { ReactNode, useContext, useState, useEffect } from 'react';
-import { FiMessageCircle, FiMoreVertical, FiShare } from 'react-icons/fi';
+import { FiDelete, FiMessageCircle, FiMoreHorizontal, FiMoreVertical, FiShare, FiTrash } from 'react-icons/fi';
 import { IoHeart, IoHeartOutline } from 'react-icons/io5';
 import { Link, useNavigate } from 'react-router-dom';
 import { UserContext, UserContextType } from '../../context/user.context';
@@ -95,7 +99,7 @@ export default function TweetsCard({
   const [isLiked, setIsLiked] = useState(tweet.likes.includes(user._id));
   const [likeCount, setLikeCount] = useState(tweet.likes.length);
   const [repliesCount, setRepliesCount] = useState(0);
-
+  const [deleted, setDeleted] = useState(false)
   const visitTweet = (e: any) => {
     e.stopPropagation();
     return navigate('/' + tweet.author.username + '/tweet/' + tweet._id, {
@@ -115,6 +119,13 @@ export default function TweetsCard({
       })
       .catch((err) => console.log(err));
   };
+  const deleteTweet = (e: any) => {
+    e.stopPropagation();
+    axios
+      .delete('/api/tweet/' + tweet._id)
+      .then(() => setDeleted(true))
+      .catch((err) => console.log(err))
+  }
   useEffect(() => {
     axios
       .get<ITweet[]>('/api/tweet/' + tweet._id + '/replies')
@@ -125,6 +136,7 @@ export default function TweetsCard({
         console.log(err);
       });
   }, [tweet._id]);
+  if (deleted) return null;
   return (
     <Box
       bg={'white'}
@@ -144,21 +156,28 @@ export default function TweetsCard({
             <Avatar src={tweet.author.avatar} mt={3} />
           )}
         </Link>
-        <Stack w={'full'} onClick={(e: any) => visitTweet(e)} py={3} spacing={0}>
-          <HStack justify={'space-between'}  >
-            <Link to={'/' + tweet.author.username}>
-              <Stack alignItems={'center'} direction={'row'}>
-                <Text fontWeight={'bold'}>{tweet.author.displayName}</Text>
-                <Text fontSize={'sm'} color={'gray.500'}>
-                  @{tweet.author.username}
-                </Text>
-                <Text color={'gray.500'} fontSize={'sm'}>
-                  &middot; {moment(tweet.timestamp.toString()).fromNow()}
-                </Text>
-              </Stack>
-            </Link>
+        <Stack w={'full'} onClick={visitTweet} py={3} spacing={0}>
+          <HStack  >
+            {/* <Link to={'/' + tweet.author.username}> */}
+            <Stack alignItems={'center'} direction={'row'}>
+              <Text fontWeight={'bold'}>{tweet.author.displayName}</Text>
+              <Text fontSize={'sm'} color={'gray.500'}>
+                @{tweet.author.username}
+              </Text>
+              <Text color={'gray.500'} fontSize={'sm'}>
+                &middot; {moment(tweet.timestamp.toString()).fromNow()}
+              </Text>
+            </Stack>
+            {/* </Link> */}
             {
-              self && <IconButton aria-label='more' size={'sm'} variant={'ghost'} icon={<FiMoreVertical />} />
+              self && (
+                <Menu>
+                  <MenuButton onClick={(e: any) => e.stopPropagation()} as={IconButton} icon={<FiMoreHorizontal />} variant='ghost' />
+                  <MenuList >
+                    <MenuItem onClick={deleteTweet} color={'red'} icon={<FiTrash />}>Delete</MenuItem>
+                  </MenuList>
+                </Menu>
+              )
             }
           </HStack>
           <Text whiteSpace={'pre-wrap'}>{tweet.content}</Text>

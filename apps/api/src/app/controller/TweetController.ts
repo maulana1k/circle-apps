@@ -134,7 +134,7 @@ export default class TweetController extends BaseController {
   }
   private async delete(req: Request, res: Response) {
     try {
-      const { tweetId }: any = req.params;
+      const { tweetId } = req.params;
       const deleted = await Tweet.deleteOne({ _id: tweetId });
       res.status(200).json(deleted);
     } catch (error) {

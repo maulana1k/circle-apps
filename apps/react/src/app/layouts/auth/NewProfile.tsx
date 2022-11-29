@@ -69,11 +69,9 @@ export default function NewProfile() {
       } else {
         avatarUrl = avatar;
       }
-      console.log('ava', avatarUrl);
       const dp = displayName || user.username;
       const data = { ...user, displayName: dp, avatar: avatarUrl };
       const res = await axios.put<IUser>('/api/auth/update-profile', data);
-      console.log(res.data);
       dispatcher({ ...res.data, token: user.token });
       navigate('/', { replace: true });
     } catch (error) {
