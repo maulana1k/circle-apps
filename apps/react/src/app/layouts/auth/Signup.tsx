@@ -102,8 +102,8 @@ export default function Signup() {
               <FormControl isRequired>
                 <FormLabel>Username</FormLabel>
                 <Input
-                  borderColor={'gray.400'}
                   borderRadius={'full'}
+                  variant={'filled'}
                   type={'text'}
                   onChange={formHandler}
                   name={'username'}
@@ -112,7 +112,7 @@ export default function Signup() {
               <FormControl isRequired>
                 <FormLabel>Email</FormLabel>
                 <Input
-                  borderColor={'gray.400'}
+                  variant={'filled'}
                   borderRadius={'full'}
                   type={'email'}
                   onChange={formHandler}
@@ -122,7 +122,7 @@ export default function Signup() {
               <FormControl isRequired>
                 <FormLabel>Birth</FormLabel>
                 <Input
-                  borderColor={'gray.400'}
+                  variant={'filled'}
                   borderRadius={'full'}
                   type={'date'}
                   onChange={formHandler}
@@ -133,7 +133,7 @@ export default function Signup() {
                 <FormLabel>Password</FormLabel>
                 <InputGroup>
                   <Input
-                    borderColor={'gray.400'}
+                    variant={'filled'}
                     borderRadius={'full'}
                     type={isHidden ? 'password' : 'text '}
                     onChange={formHandler}

@@ -84,79 +84,81 @@ function Signin() {
   };
   return (
     <AuthLayout>
-      <Stack spacing={4}>
-        <Heading fontFamily={'poppins'} size={'xl'}>
-          Sign in.
-        </Heading>
-        <HStack>
-          <Text fontSize={'md'}>Don't have an account?</Text>
-          <Text fontSize={'md'} color="twitter.500">
-            <Link to={'/signup'}>Create one.</Link>
-          </Text>
-        </HStack>
-        <Divider colorScheme={'gray'} />
-        <Box className="md:w-96 w-full">
-          <form onSubmit={signin}>
-            <Stack spacing={4}>
-              <FormControl isRequired>
-                <FormLabel>Username or Email</FormLabel>
-                <Input
-                  borderColor={'gray.400'}
-                  borderRadius={'full'}
-                  name={'username'}
-                  disabled={loading}
-                  onChange={formHandler}
-                />
-              </FormControl>
-              <FormControl isRequired>
-                <FormLabel>Password</FormLabel>
-                <InputGroup>
+      <Stack >
+        <Stack spacing={4}>
+          <Heading fontFamily={'poppins'} size={'xl'}>
+            Sign in.
+          </Heading>
+          <HStack>
+            <Text fontSize={'md'}>Don't have an account?</Text>
+            <Text fontSize={'md'} color="twitter.500">
+              <Link to={'/signup'}>Create one.</Link>
+            </Text>
+          </HStack>
+          <Divider colorScheme={'gray'} />
+          <Box className="md:w-96 w-full">
+            <form onSubmit={signin}>
+              <Stack spacing={4}>
+                <FormControl isRequired>
+                  <FormLabel>Username or Email</FormLabel>
                   <Input
-                    borderColor={'gray.400'}
-                    name={'password'}
                     borderRadius={'full'}
-                    type={isHidden ? 'password' : 'text'}
+                    name={'username'}
+                    variant={'filled'}
                     disabled={loading}
                     onChange={formHandler}
                   />
-                  <InputRightElement>
-                    <Button
-                      onClick={() => setIsHidden(!isHidden)}
-                      variant={'link'}
-                    >
-                      {isHidden ? <FiEyeOff /> : <FiEye />}
-                    </Button>
-                  </InputRightElement>
-                </InputGroup>
-              </FormControl>
-              <HStack justify={'space-between'}>
-                <Checkbox isChecked >Remember me?</Checkbox>
-                {/* <Link to={'/forgot-password'}>
+                </FormControl>
+                <FormControl isRequired>
+                  <FormLabel>Password</FormLabel>
+                  <InputGroup>
+                    <Input
+                      name={'password'}
+                      borderRadius={'full'}
+                      variant={'filled'}
+                      type={isHidden ? 'password' : 'text'}
+                      disabled={loading}
+                      onChange={formHandler}
+                    />
+                    <InputRightElement>
+                      <Button
+                        onClick={() => setIsHidden(!isHidden)}
+                        variant={'link'}
+                      >
+                        {isHidden ? <FiEyeOff /> : <FiEye />}
+                      </Button>
+                    </InputRightElement>
+                  </InputGroup>
+                </FormControl>
+                <HStack justify={'space-between'}>
+                  <Checkbox isChecked >Remember me?</Checkbox>
+                  {/* <Link to={'/forgot-password'}>
                   <Text color="twitter.500">Forgot password</Text>
                 </Link> */}
-              </HStack>
-              <Button
-                borderRadius={'full'}
-                colorScheme={'twitter'}
-                type="submit"
-                isLoading={loading}
-                loadingText="Just a moment"
-              >
-                Sign in
-              </Button>
+                </HStack>
+                <Button
+                  borderRadius={'full'}
+                  colorScheme={'twitter'}
+                  type="submit"
+                  isLoading={loading}
+                  loadingText="Just a moment"
+                >
+                  Sign in
+                </Button>
 
-              <Button
-                borderRadius={'full'}
-                variant={'outline'}
-                borderColor={'gray.400'}
-                iconSpacing={2}
-                leftIcon={<IoLogoGoogle />}
-              >
-                Sign up with Google
-              </Button>
-            </Stack>
-          </form>
-        </Box>
+                <Button
+                  borderRadius={'full'}
+                  variant={'outline'}
+                  borderColor={'gray.400'}
+                  iconSpacing={2}
+                  leftIcon={<IoLogoGoogle />}
+                >
+                  Sign up with Google
+                </Button>
+              </Stack>
+            </form>
+          </Box>
+        </Stack>
       </Stack>
     </AuthLayout>
   );
