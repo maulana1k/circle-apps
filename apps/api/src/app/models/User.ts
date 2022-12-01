@@ -6,9 +6,9 @@ const UserSchema = new Schema<IUser>({
   username: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true, select: true },
   password: { type: String, required: true },
-  avatar: { type: String, default: 'default' },
+  avatar: { type: String, default: '' },
   birth: { type: Date },
-  coverImages: { type: String, default: 'default' },
+  coverImages: { type: String, default: '' },
   bio: { type: String, default: '' },
   verified: { type: Boolean, default: false, select: true },
 });

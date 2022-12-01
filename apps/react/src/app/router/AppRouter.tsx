@@ -11,6 +11,7 @@ import FollowLists from '../components/profile/FollowLists';
 import ProfileLayout from '../components/profile/ProfileLayout';
 import ComingSoon from '../components/ComingSoon';
 import NewProfile from '../layouts/auth/NewProfile';
+import Explore from '../components/Explore';
 
 export default function AppRouter() {
   return (
@@ -23,7 +24,7 @@ export default function AppRouter() {
           <Route path="following" element={<FollowLists />} />
         </Route>
         <Route path="/:username/tweet/:tweetId" element={<Tweets />} />
-        <Route path="/explore" element={<ComingSoon />} />
+        <Route path="/explore" element={<Explore />} />
         <Route path="/notifications" element={<ComingSoon />} />
         <Route path="/messages" element={<ComingSoon />} />
         <Route path="/saved" element={<ComingSoon />} />
@@ -31,7 +32,6 @@ export default function AppRouter() {
       <Route path="/signup" element={<Signup />} />
       <Route path="/signup/new-profile" element={<NewProfile />} />
       <Route path="/signin" element={<Signin />} />
-      {/* <Route path="/forgot-password" element={<ForgotPassword />} /> */}
     </Routes>
   );
 }

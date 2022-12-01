@@ -2,7 +2,9 @@ import { Request, Response } from 'express';
 import { query, validationResult } from 'express-validator';
 
 import authMiddleware from '../middlewares/auth.middleware';
+import Relation from '../models/Relation';
 import Tweet from '../models/Tweet';
+import User from '../models/User';
 import { response_bad_request, response_success } from '../utils/responses';
 import BaseController from './BaseController';
 
@@ -22,6 +24,7 @@ export default class TweetController extends BaseController {
       [query('size').toInt(), query('offset').toInt()],
       this.index
     );
+    this.router.get('/following/:username', this.tweetFollowing)
     this.router.post('/new', this.post);
     this.router.get('/users/:userId', this.getUserTweets);
     this.router.get('/:tweetId', this.details);
@@ -40,6 +43,19 @@ export default class TweetController extends BaseController {
         .sort({ timestamp: -1 })
         .skip(offset * size)
         .limit(size);
+      return res.status(200).json(tweets);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+  private async tweetFollowing(req: Request, res: Response) {
+    try {
+      const { username } = req.params;
+      const followings = await Relation.findOne({ user: username })
+      console.log(followings);
+      const tweets = await Tweet.find({ replyTo: null, author: { $in: followings.followings } })
+        .populate('author', { displayName: 1, username: 1, avatar: 1 })
+        .sort({ timestamp: -1 })
       return res.status(200).json(tweets);
     } catch (error) {
       res.status(500).json(error);

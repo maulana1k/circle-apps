@@ -51,6 +51,7 @@ export default function Profile() {
 
   const [userRelation, setUserRealtion] = useState<IRelationJoin | null>(null);
   const [tweets, setTweets] = useState<ITweet[]>();
+  const [likedTweets, setLikedTweets] = useState<ITweet[]>()
   const [isFollowing, setIsFollowing] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -77,17 +78,19 @@ export default function Profile() {
         );
         const tweets = await axios.get(
           '/api/tweet/users/' + userData.data._id,
-          {
-            headers: { authorization: 'Bearer ' + user.token },
-          }
+          { headers: { authorization: 'Bearer ' + user.token }, }
         );
+        const liked = await axios.get('/api/users/' + location.pathname + '/likedTweets',
+          { headers: { authorization: 'Bearer ' + user.token }, }
+        )
+        setLikedTweets(liked.data);
         setProfileData(userData.data);
         setUserRealtion(relations.data);
         if (relations.data.followers.filter((u) => u._id === user._id).length) {
           setIsFollowing(true);
         }
         setTweets(tweets.data);
-        console.log(userData.data);
+        console.log('likes ', likedTweets);
       } catch (error) {
         console.log(error);
       }
@@ -125,10 +128,12 @@ export default function Profile() {
   return (
     <Stack spacing={6} pt={12} overflowY={'scroll'} h={'100vh'} w={'full'}  >
       <Stack spacing={-16}  >
-        {user.coverImages ? (
+        {profileData.coverImages === ('' || 'default') ? (
           <Box h={40} w={'full'} bg={'twitter.500'}></Box>
         ) : (
-          <Image src={profileData.coverImages} />
+          <Box h={'64'} alignItems={'center'} display={'flex'} overflow={'hidden'}  >
+            <Image w={'full'} src={profileData.coverImages} />
+          </Box>
         )}
         <Box px={6}>
           <Stack
@@ -221,7 +226,15 @@ export default function Profile() {
         <TabPanels>
           <TabPanel padding={0} >
             <Stack divider={<Divider />} spacing={0} w={'full'}>
-              {tweets && tweets.map((tweet) => <TweetsCard self tweet={tweet} />)}
+              {tweets && tweets.map((tweet) => <TweetsCard key={tweet._id} self tweet={tweet} />)}
+            </Stack>
+          </TabPanel>
+          <TabPanel>
+            <Stack></Stack>
+          </TabPanel>
+          <TabPanel padding={0} >
+            <Stack divider={<Divider />} spacing={0} w={'full'}>
+              {likedTweets && likedTweets.map((tweet) => <TweetsCard key={tweet._id} tweet={tweet} />)}
             </Stack>
           </TabPanel>
         </TabPanels>

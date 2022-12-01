@@ -19,6 +19,7 @@ export default class UsersController extends BaseController {
      */
     this.router.get('/:username', this.getProfile);
     this.router.get('/:username/tweets', this.getTweetsByUser);
+    this.router.get('/:username/likedTweets', this.getLikedTweetsByUser);
     this.router.get('/:username/relations', this.getUserRelations);
     this.router.get('/search/:query', this.userSearch);
     this.router.post('/:username/follows', this.userFollows);
@@ -42,6 +43,17 @@ export default class UsersController extends BaseController {
       const tweets = await Tweet.find({ author: username }).lean();
       res.status(200).json(tweets);
     } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+  private async getLikedTweetsByUser(req: Request, res: Response) {
+    try {
+      const { username } = req.params;
+      const user = await User.findOne({ username }, { _id: 1 })
+      const likedTweets = await Tweet.find({ likes: { $in: [user._id] } }).populate('author', { displayName: 1, username: 1, avatar: 1 });
+      res.status(200).json(likedTweets);
+    } catch (error) {
+      console.log(error);
       res.status(500).json(error);
     }
   }

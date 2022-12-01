@@ -13,7 +13,7 @@ import { ITweet } from '@circle-app/api-interfaces';
 import axios from 'axios';
 import moment from 'moment';
 import { useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { UserContext, UserContextType } from '../../context/user.context';
 import TweetModal from './TweetModal';
 import { LikeButton, ReplyButton, ShareButton } from './TweetsCard';
@@ -23,8 +23,6 @@ export default function TweetVisited({ tweet }: { tweet: ITweet }) {
   const [isLiked, setIsLiked] = useState(tweet.likes.includes(user._id));
   const [likeCount, setLikeCount] = useState(tweet.likes.length);
   const { isOpen, onClose, onOpen } = useDisclosure();
-  // const navigate = useNavigate();
-  // console.log(isLiked);
 
   const likeTweet = async (e: any) => {
     e.stopPropagation();
@@ -48,12 +46,11 @@ export default function TweetVisited({ tweet }: { tweet: ITweet }) {
         <HStack spacing={2}>
           <Avatar src={tweet.author.avatar} />
           <Stack spacing={0}>
-            <Text fontWeight={'bold'}>{tweet.author.displayName}</Text>
+            <Link to={'/' + tweet.author.username} >
+              <Text _hover={{ textDecoration: 'underline' }} fontWeight={'bold'}>{tweet.author.displayName}</Text>
+            </Link>
             <Text color={'gray.500'}>
               @{tweet.author.username}
-              {/* <Button variant={'link'} colorScheme={'twitter'}>
-                Follow
-              </Button> */}
             </Text>
           </Stack>
         </HStack>

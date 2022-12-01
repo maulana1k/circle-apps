@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react'
-import { Avatar, Button, Center, Flex, FormControl, FormLabel, Input, Modal, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Stack, Textarea } from '@chakra-ui/react'
-import { UserWithToken } from '@circle-app/api-interfaces'
-import { FiUpload } from 'react-icons/fi';
+import { Avatar, Box, Button, Center, Flex, FormControl, FormLabel, Image, Input, Modal, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Stack, Textarea } from '@chakra-ui/react'
+import { IUser, UserWithToken } from '@circle-app/api-interfaces'
+import { FiImage, FiUpload, FiUser } from 'react-icons/fi';
 import { uploadFiles } from '../../hooks/useFirebase';
 import axios from 'axios';
 import { UserContext, UserContextType } from '../../context/user.context';
@@ -10,30 +10,49 @@ import { useNavigate } from 'react-router-dom';
 export default function UpdateProfile(props: { isOpen: any, onClose: any, profile: UserWithToken }) {
     const [name, setName] = useState(props.profile.displayName)
     const [bio, setBio] = useState(props.profile.bio);
-    const [file, setFile] = useState<Blob>();
-    const [avatar, setAvatar] = useState(props.profile.avatar);
+    const [avatar, setAvatar] = useState<Blob>();
+    const [cover, setCover] = useState<Blob>()
+    const [avatarUrl, setAvatarUrl] = useState(props.profile.avatar);
+    const [coverUrl, setCoverUrl] = useState(props.profile.coverImages);
+    const [loading, setLoading] = useState(false)
     const { user, dispatcher } = useContext(UserContext) as UserContextType;
     const navigate = useNavigate();
 
-    const fileHandle = (e: any) => {
+    const avatarHandle = (e: any) => {
         if (e.target.files[0].size > 2 * 1024 * 1024) {
             alert('Image size too large!');
             return;
         }
-        setFile(e.target.files[0]);
-        setAvatar(URL.createObjectURL(e.target.files[0]));
+        setAvatar(e.target.files[0]);
+        setAvatarUrl(URL.createObjectURL(e.target.files[0]));
     }
-
+    const coverHandle = (e: any) => {
+        if (e.target.files[0].size > 2 * 1024 * 1024) {
+            alert('Image size too large!');
+            return;
+        }
+        setCover(e.target.files[0]);
+        setCoverUrl(URL.createObjectURL(e.target.files[0]));
+    }
     const updateProfile = async () => {
-        let newAvatar;
+        setLoading(true)
+        let newAvatar, newCover;
         try {
-            if (avatar !== props.profile.avatar && file) {
-                const fileUrl = await uploadFiles(file, 'images/users/avatar' + props.profile.username + '.jpg')
+            if (avatarUrl !== props.profile.avatar && avatar) {
+                const fileUrl = await uploadFiles(avatar, 'images/users/avatar/' + props.profile.username + '.jpg')
                 newAvatar = fileUrl;
             } else {
-                newAvatar = avatar;
+                newAvatar = avatarUrl;
             }
-            const data = { ...props.profile, displayName: name, avatar: newAvatar, bio: bio };
+            if (coverUrl !== props.profile.coverImages && cover) {
+                const fileUrl = await uploadFiles(cover, 'images/users/cover/' + props.profile.username + '.jpg')
+                newCover = fileUrl
+            } else {
+                newCover = coverUrl;
+            }
+            const data: IUser = { ...props.profile, displayName: name, avatar: newAvatar, bio: bio, coverImages: newCover };
+            console.log('data ', data);
+
             const res = await axios.put('/api/auth/update-profile', data);
             dispatcher({ ...res.data, token: user.token });
             navigate('/', { replace: true });
@@ -47,10 +66,19 @@ export default function UpdateProfile(props: { isOpen: any, onClose: any, profil
             <ModalContent borderRadius={20} >
                 <ModalHeader>Update Profile</ModalHeader>
                 <ModalCloseButton />
+
                 <Stack align={'start'} p={8}>
+                    {
+                        coverUrl && (
+                            <Box h={'44'} alignItems={'center'} display={'flex'} overflow={'hidden'} rounded={'md'} >
+                                <Image src={coverUrl} />
+                            </Box>
+                        )
+                    }
                     <Stack direction={'row'} align='end' >
-                        <Avatar size={'2xl'} src={avatar} />
-                        <input onInput={fileHandle} type="file" hidden id="avatar" accept='*.img' />
+                        <input onInput={coverHandle} type="file" hidden id='cover' />
+                        <Avatar size={'2xl'} src={avatarUrl} />
+                        <input onInput={avatarHandle} type="file" hidden id="avatar" accept='*.img' />
                         <label htmlFor="avatar">
                             <Flex
                                 justifyContent={'center'}
@@ -63,7 +91,23 @@ export default function UpdateProfile(props: { isOpen: any, onClose: any, profil
                                 className="hover:scale-110 cursor-pointer duration-200"
                             >
                                 <Center>
-                                    <FiUpload size={30} />
+                                    <FiUser size={30} />
+                                </Center>
+                            </Flex>
+                        </label>
+                        <label htmlFor="cover">
+                            <Flex
+                                justifyContent={'center'}
+                                bg={'twitter.400'}
+                                h={14}
+                                w={14}
+                                color={'white'}
+                                rounded={'full'}
+                                cursor={'pointer'}
+                                className="hover:scale-110 cursor-pointer duration-200"
+                            >
+                                <Center>
+                                    <FiImage size={30} />
                                 </Center>
                             </Flex>
                         </label>
@@ -76,7 +120,7 @@ export default function UpdateProfile(props: { isOpen: any, onClose: any, profil
                         <FormLabel>Bio</FormLabel>
                         <Textarea onChange={(e: any) => setBio(e.target.value)} value={bio} />
                     </FormControl>
-                    <Button onClick={updateProfile} colorScheme={'twitter'} rounded={"full"}  >Save</Button>
+                    <Button isLoading={loading} loadingText={'Updating your profile'} onClick={updateProfile} colorScheme={'twitter'} rounded={"full"}  >Save</Button>
                 </Stack>
             </ModalContent>
         </Modal>

@@ -100,7 +100,7 @@ class AuthController extends BaseController {
   }
   private async updateProfile(req: Request, res: Response) {
     try {
-      const { _id, displayName, bio, avatar }: IUser = req.body;
+      const { _id, displayName, bio, avatar, coverImages }: IUser = req.body;
       console.log(req.body);
 
       const user = await User.findByIdAndUpdate(
@@ -110,6 +110,7 @@ class AuthController extends BaseController {
             bio,
             displayName,
             avatar,
+            coverImages
           },
         },
         { new: true }
@@ -119,7 +120,6 @@ class AuthController extends BaseController {
       res.status(500).json(error);
     }
   }
-  private async forgotPassword(req, res) {}
-  private async sendOTP(req, res) {}
+
 }
 export default AuthController;

@@ -8,8 +8,9 @@ import {
 } from '@chakra-ui/react';
 import { ITweet } from '@circle-app/api-interfaces';
 import axios from 'axios';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { FiFile } from 'react-icons/fi';
+import { UserContext, UserContextType } from '../context/user.context';
 
 import TweetsCard from './atoms/TweetsCard';
 import { TweetField } from './TweetField';
@@ -36,16 +37,15 @@ export const FileAttachment = (props: { src: string }) => {
 };
 
 export default function Home() {
+  const { user } = useContext(UserContext) as UserContextType
   const [tweets, setTweets] = useState<ITweet[]>([]);
   const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
     (async () => {
       try {
-        const res = await axios.get<ITweet[]>('/api/tweet?size=15&offset=0');
+        const res = await axios.get<ITweet[]>('/api/tweet/following/' + user.username);
         setTweets(res.data);
-        console.log(res.data);
-
       } catch (error) {
         console.log(error);
       }

@@ -36,6 +36,7 @@ export default function Search() {
         <InputGroup>
           <InputLeftElement pointerEvents={'none'} children={<FiSearch />} />
           <Input
+            type={'search'}
             borderRadius={'full'}
             variant={'filled'}
             width="full"

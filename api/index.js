@@ -162,13 +162,14 @@ class AuthController extends BaseController_1.default {
     updateProfile(req, res) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             try {
-                const { _id, displayName, bio, avatar } = req.body;
+                const { _id, displayName, bio, avatar, coverImages } = req.body;
                 console.log(req.body);
                 const user = yield User_1.default.findByIdAndUpdate(_id, {
                     $set: {
                         bio,
                         displayName,
                         avatar,
+                        coverImages
                     },
                 }, { new: true });
                 res.status(200).json(user);
@@ -177,12 +178,6 @@ class AuthController extends BaseController_1.default {
                 res.status(500).json(error);
             }
         });
-    }
-    forgotPassword(req, res) {
-        return tslib_1.__awaiter(this, void 0, void 0, function* () { });
-    }
-    sendOTP(req, res) {
-        return tslib_1.__awaiter(this, void 0, void 0, function* () { });
     }
 }
 exports["default"] = AuthController;
@@ -216,6 +211,7 @@ exports["default"] = BaseController;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const tslib_1 = __webpack_require__("tslib");
 const express_validator_1 = __webpack_require__("express-validator");
+const Relation_1 = tslib_1.__importDefault(__webpack_require__("./apps/api/src/app/models/Relation.ts"));
 const Tweet_1 = tslib_1.__importDefault(__webpack_require__("./apps/api/src/app/models/Tweet.ts"));
 const responses_1 = __webpack_require__("./apps/api/src/app/utils/responses.ts");
 const BaseController_1 = tslib_1.__importDefault(__webpack_require__("./apps/api/src/app/controller/BaseController.ts"));
@@ -231,6 +227,7 @@ class TweetController extends BaseController_1.default {
          * Routes mapping
          */
         this.router.get('/', [(0, express_validator_1.query)('size').toInt(), (0, express_validator_1.query)('offset').toInt()], this.index);
+        this.router.get('/following/:username', this.tweetFollowing);
         this.router.post('/new', this.post);
         this.router.get('/users/:userId', this.getUserTweets);
         this.router.get('/:tweetId', this.details);
@@ -250,6 +247,22 @@ class TweetController extends BaseController_1.default {
                     .sort({ timestamp: -1 })
                     .skip(offset * size)
                     .limit(size);
+                return res.status(200).json(tweets);
+            }
+            catch (error) {
+                res.status(500).json(error);
+            }
+        });
+    }
+    tweetFollowing(req, res) {
+        return tslib_1.__awaiter(this, void 0, void 0, function* () {
+            try {
+                const { username } = req.params;
+                const followings = yield Relation_1.default.findOne({ user: username });
+                console.log(followings);
+                const tweets = yield Tweet_1.default.find({ replyTo: null, author: { $in: followings.followings } })
+                    .populate('author', { displayName: 1, username: 1, avatar: 1 })
+                    .sort({ timestamp: -1 });
                 return res.status(200).json(tweets);
             }
             catch (error) {
@@ -443,6 +456,7 @@ class UsersController extends BaseController_1.default {
          */
         this.router.get('/:username', this.getProfile);
         this.router.get('/:username/tweets', this.getTweetsByUser);
+        this.router.get('/:username/likedTweets', this.getLikedTweetsByUser);
         this.router.get('/:username/relations', this.getUserRelations);
         this.router.get('/search/:query', this.userSearch);
         this.router.post('/:username/follows', this.userFollows);
@@ -471,6 +485,20 @@ class UsersController extends BaseController_1.default {
                 res.status(200).json(tweets);
             }
             catch (error) {
+                res.status(500).json(error);
+            }
+        });
+    }
+    getLikedTweetsByUser(req, res) {
+        return tslib_1.__awaiter(this, void 0, void 0, function* () {
+            try {
+                const { username } = req.params;
+                const user = yield User_1.default.findOne({ username }, { _id: 1 });
+                const likedTweets = yield Tweet_1.default.find({ likes: { $in: [user._id] } }).populate('author', { displayName: 1, username: 1, avatar: 1 });
+                res.status(200).json(likedTweets);
+            }
+            catch (error) {
+                console.log(error);
                 res.status(500).json(error);
             }
         });
@@ -650,9 +678,9 @@ const UserSchema = new mongoose_1.Schema({
     username: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true, select: true },
     password: { type: String, required: true },
-    avatar: { type: String, default: 'default' },
+    avatar: { type: String, default: '' },
     birth: { type: Date },
-    coverImages: { type: String, default: 'default' },
+    coverImages: { type: String, default: '' },
     bio: { type: String, default: '' },
     verified: { type: Boolean, default: false, select: true },
 });
