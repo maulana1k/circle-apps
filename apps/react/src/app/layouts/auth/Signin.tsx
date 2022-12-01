@@ -65,7 +65,7 @@ function Signin() {
         title: 'Signin success',
         status: 'success',
         duration: 5000,
-        position: 'top-right',
+        position: 'top',
       });
       userContext.dispatcher(res.data);
       localStorage.setItem('user', JSON.stringify(res.data));
@@ -76,7 +76,7 @@ function Signin() {
           title: error.response?.data as string,
           status: 'error',
           duration: 5000,
-          position: 'top-right',
+          position: 'top',
         });
       }
       setLoading(false);

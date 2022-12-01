@@ -10,6 +10,12 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
 } from '@chakra-ui/react';
 import { useContext } from 'react';
 
@@ -61,6 +67,7 @@ export default function SideNavigation() {
     Profile: { icon: FiUser, path: user.username },
   };
   const { isOpen, onClose, onOpen } = useDisclosure();
+  const { isOpen: isOpenLogout, onClose: onCLoseLogout, onOpen: onOpenLogout } = useDisclosure();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -122,13 +129,26 @@ export default function SideNavigation() {
               </Stack>
             </MenuButton>
             <MenuList>
-              <MenuItem onClick={logout}>
+              <MenuItem onClick={onOpenLogout}>
                 <FiLogOut /> Log out
               </MenuItem>
             </MenuList>
           </Menu>
         </Box>
       </Stack>
+      <Modal isCentered isOpen={isOpenLogout} onClose={onCLoseLogout}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Logout</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody p={6} >
+            <Stack spacing={6} >
+              <Text fontSize={'xl'} >Are you sure to logout?</Text>
+              <Button onClick={logout} rounded={'full'} colorScheme={'red'} >Logout</Button>
+            </Stack>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </div>
   );
 }

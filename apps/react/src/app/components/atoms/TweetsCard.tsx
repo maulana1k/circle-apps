@@ -16,7 +16,7 @@ import {
 import { ITweet } from '@circle-app/api-interfaces';
 import axios from 'axios';
 import moment from 'moment';
-import { ReactNode, useContext, useState, useEffect } from 'react';
+import { ReactNode, useContext, useState, useEffect, ButtonHTMLAttributes } from 'react';
 import { FiDelete, FiMessageCircle, FiMoreHorizontal, FiMoreVertical, FiShare, FiTrash } from 'react-icons/fi';
 import { IoHeart, IoHeartOutline } from 'react-icons/io5';
 import { Link, useNavigate } from 'react-router-dom';
@@ -158,9 +158,10 @@ export default function TweetsCard({
         </Link>
         <Stack w={'full'} onClick={visitTweet} py={3} spacing={0}>
           <HStack  >
-            {/* <Link to={'/' + tweet.author.username}> */}
             <Stack alignItems={'center'} direction={'row'}>
-              <Text fontWeight={'bold'}>{tweet.author.displayName}</Text>
+              <Link onClick={(e) => e.stopPropagation()} to={'/' + tweet.author.username}>
+                <Text _hover={{ textDecoration: 'underline' }} fontWeight={'bold'}>{tweet.author.displayName}</Text>
+              </Link>
               <Text fontSize={'sm'} color={'gray.500'}>
                 @{tweet.author.username}
               </Text>
@@ -168,11 +169,10 @@ export default function TweetsCard({
                 &middot; {moment(tweet.timestamp.toString()).fromNow()}
               </Text>
             </Stack>
-            {/* </Link> */}
             {
               self && (
                 <Menu>
-                  <MenuButton onClick={(e: any) => e.stopPropagation()} as={IconButton} icon={<FiMoreHorizontal />} variant='ghost' />
+                  <MenuButton onClick={(e) => e.stopPropagation()} as={IconButton} icon={<FiMoreHorizontal />} variant='ghost' />
                   <MenuList >
                     <MenuItem onClick={deleteTweet} color={'red'} icon={<FiTrash />}>Delete</MenuItem>
                   </MenuList>

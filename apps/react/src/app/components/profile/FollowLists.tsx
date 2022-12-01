@@ -6,11 +6,9 @@ import {
   TabPanels,
   Tabs,
 } from '@chakra-ui/react';
-import { IRelation, IRelationJoin, IUser } from '@circle-app/api-interfaces';
-import axios from 'axios';
-import { useContext, useEffect, useState } from 'react';
+import { IRelationJoin, IUser } from '@circle-app/api-interfaces';
+import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { UserContext, UserContextType } from '../../context/user.context';
 import UserList from '../atoms/UserList';
 
 export default function FollowLists() {

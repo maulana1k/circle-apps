@@ -69,7 +69,7 @@ export default function UpdateProfile(props: { isOpen: any, onClose: any, profil
 
                 <Stack align={'start'} p={8}>
                     {
-                        coverUrl && (
+                        coverUrl !== ('' || 'default') && (
                             <Box h={'44'} alignItems={'center'} display={'flex'} overflow={'hidden'} rounded={'md'} >
                                 <Image src={coverUrl} />
                             </Box>

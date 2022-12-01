@@ -226,7 +226,7 @@ export default function Profile() {
         <TabPanels>
           <TabPanel padding={0} >
             <Stack divider={<Divider />} spacing={0} w={'full'}>
-              {tweets && tweets.map((tweet) => <TweetsCard key={tweet._id} self tweet={tweet} />)}
+              {tweets && tweets.map((tweet) => <TweetsCard key={tweet._id} self={location.pathname === user.username} tweet={tweet} />)}
             </Stack>
           </TabPanel>
           <TabPanel>
