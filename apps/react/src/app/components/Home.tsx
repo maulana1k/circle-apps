@@ -6,12 +6,13 @@ import {
   Image,
   Stack,
 } from '@chakra-ui/react';
-import { ITweet } from '@circle-app/api-interfaces';
 import axios from 'axios';
+import { ITweet } from '@circle-app/api-interfaces';
 import { useState, useEffect, useContext } from 'react';
 import { FiFile } from 'react-icons/fi';
-import { UserContext, UserContextType } from '../context/user.context';
+import { Helmet } from 'react-helmet'
 
+import { UserContext, UserContextType } from '../context/user.context';
 import TweetsCard from './atoms/TweetsCard';
 import { TweetField } from './TweetField';
 
@@ -53,6 +54,9 @@ export default function Home() {
   }, [refresh]);
   return (
     <>
+      <Helmet>
+        <title>Home | Unsoedfess</title>
+      </Helmet>
       <Box
         className="backdrop-blur-sm z-40"
         bg={'whiteAlpha.800'}

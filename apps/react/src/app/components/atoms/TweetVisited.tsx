@@ -13,6 +13,7 @@ import { ITweet } from '@circle-app/api-interfaces';
 import axios from 'axios';
 import moment from 'moment';
 import { useContext, useState } from 'react';
+import { Helmet } from 'react-helmet';
 import { Link, useNavigate } from 'react-router-dom';
 import { UserContext, UserContextType } from '../../context/user.context';
 import TweetModal from './TweetModal';
@@ -41,6 +42,9 @@ export default function TweetVisited({ tweet }: { tweet: ITweet }) {
   };
   return (
     <Box w={'full'} bg={'white'} p={3}>
+      <Helmet>
+        <title>{tweet.author.displayName} : "{tweet.content}"</title>
+      </Helmet>
       <TweetModal replyTo={tweet} isOpen={isOpen} onClose={onClose} />
       <Stack spacing={4}>
         <HStack spacing={2}>

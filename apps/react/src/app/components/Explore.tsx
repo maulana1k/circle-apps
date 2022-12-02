@@ -3,6 +3,7 @@ import { Box, Divider, Heading, Spinner, Stack, Text } from '@chakra-ui/react';
 import { ITweet } from '@circle-app/api-interfaces';
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react'
+import { Helmet } from 'react-helmet';
 import TweetsCard from './atoms/TweetsCard';
 
 export default function Explore() {
@@ -43,6 +44,9 @@ export default function Explore() {
     }
     return (
         <>
+            <Helmet>
+                <title>Explore | Unsoedfess</title>
+            </Helmet>
             <Box
                 className="backdrop-blur-sm z-40"
                 bg={'whiteAlpha.800'}

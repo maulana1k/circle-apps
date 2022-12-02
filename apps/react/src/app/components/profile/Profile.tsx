@@ -25,6 +25,7 @@ import {
 } from '@circle-app/api-interfaces';
 import axios from 'axios';
 import { useContext, useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet';
 import { FiMail } from 'react-icons/fi';
 import { IoBalloon } from 'react-icons/io5';
 import { Link, useLocation } from 'react-router-dom';
@@ -124,6 +125,9 @@ export default function Profile() {
   }
   return (
     <Stack spacing={6} pt={12} overflowY={'scroll'} h={'100vh'} w={'full'}  >
+      <Helmet>
+        <title>{profileData.displayName} (@{profileData.username}) | Unsoedfess</title>
+      </Helmet>
       <Stack spacing={-16}  >
         {profileData.coverImages === ('' || 'default') ? (
           <Box h={40} w={'full'} bg={'twitter.500'}></Box>
