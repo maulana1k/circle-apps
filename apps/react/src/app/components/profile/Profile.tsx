@@ -129,7 +129,7 @@ export default function Profile() {
         <title>{profileData.displayName} (@{profileData.username}) | Unsoedfess</title>
       </Helmet>
       <Stack spacing={-16}  >
-        {profileData.coverImages === ('' || 'default') ? (
+        {profileData.coverImages === '' || profileData.coverImages === 'default' ? (
           <Box h={40} w={'full'} bg={'twitter.500'}></Box>
         ) : (
           <Box h={'64'} alignItems={'center'} display={'flex'} overflow={'hidden'}  >
