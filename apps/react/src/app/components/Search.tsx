@@ -58,7 +58,7 @@ export default function Search() {
             {/* <TwitterTweetEmbed tweetId="1570560060698558469" /> */}
             {/* <TwitterTweetEmbed tweetId="1550658458843639808" />
             <TwitterTweetEmbed tweetId="1548608447469432832" /> */}
-            <TwitterTimelineEmbed sourceType='profile' screenName={'yogiekindra'} />
+            <TwitterTimelineEmbed sourceType='profile' screenName={'jokowi'} />
           </Box>
         </Stack>
       </Stack>
