@@ -52,7 +52,6 @@ export default class TweetController extends BaseController {
     try {
       const { username } = req.params;
       const followings = await Relation.findOne({ user: username })
-      console.log(followings);
       const tweets = await Tweet.find({ replyTo: null, author: { $in: followings.followings } })
         .populate('author', { displayName: 1, username: 1, avatar: 1 })
         .sort({ timestamp: -1 })

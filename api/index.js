@@ -259,7 +259,6 @@ class TweetController extends BaseController_1.default {
             try {
                 const { username } = req.params;
                 const followings = yield Relation_1.default.findOne({ user: username });
-                console.log(followings);
                 const tweets = yield Tweet_1.default.find({ replyTo: null, author: { $in: followings.followings } })
                     .populate('author', { displayName: 1, username: 1, avatar: 1 })
                     .sort({ timestamp: -1 });

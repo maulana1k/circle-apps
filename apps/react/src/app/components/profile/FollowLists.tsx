@@ -33,8 +33,8 @@ export default function FollowLists() {
     <Stack pt={14}>
       <Tabs defaultIndex={0} isFitted>
         <TabList px={12}>
-          <Tab>Follower</Tab>
-          <Tab>Following</Tab>
+          <Tab>Followers</Tab>
+          <Tab>Followings</Tab>
         </TabList>
         <TabPanels>
           <TabPanel>

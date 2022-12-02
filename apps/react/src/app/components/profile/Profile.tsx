@@ -47,8 +47,6 @@ export default function Profile() {
   const [profileData, setProfileData] = useState<UserWithToken | null>(
     isCurrentProfile ? user : null
   );
-  console.log(profileData);
-
   const [userRelation, setUserRealtion] = useState<IRelationJoin | null>(null);
   const [tweets, setTweets] = useState<ITweet[]>();
   const [likedTweets, setLikedTweets] = useState<ITweet[]>()
@@ -90,7 +88,6 @@ export default function Profile() {
           setIsFollowing(true);
         }
         setTweets(tweets.data);
-        console.log('likes ', likedTweets);
       } catch (error) {
         console.log(error);
       }
@@ -212,7 +209,7 @@ export default function Profile() {
               to={'/' + profileData.username + '/following'}
               state={userRelation}
             >
-              <b>{userRelation.followings.length}</b> Following
+              <b>{userRelation.followings.length}</b> Followings
             </Link>
           </Button>
         </Stack>
@@ -226,7 +223,7 @@ export default function Profile() {
         <TabPanels>
           <TabPanel padding={0} >
             <Stack divider={<Divider />} spacing={0} w={'full'}>
-              {tweets && tweets.map((tweet) => <TweetsCard key={tweet._id} self={location.pathname === user.username} tweet={tweet} />)}
+              {tweets && tweets.map((tweet) => <TweetsCard key={tweet._id} self={location.pathname.substring(1) === user.username} tweet={tweet} />)}
             </Stack>
           </TabPanel>
           <TabPanel>
