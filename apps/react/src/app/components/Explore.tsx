@@ -45,7 +45,7 @@ export default function Explore() {
     return (
         <>
             <Helmet>
-                <title>Explore | Unsoedfess</title>
+                <title>Explore / Unsoedfess</title>
             </Helmet>
             <Box
                 className="backdrop-blur-sm z-40"

@@ -55,7 +55,7 @@ export default function Home() {
   return (
     <>
       <Helmet>
-        <title>Home | Unsoedfess</title>
+        <title>Home / Unsoedfess</title>
       </Helmet>
       <Box
         className="backdrop-blur-sm z-40"

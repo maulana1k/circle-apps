@@ -126,7 +126,7 @@ export default function Profile() {
   return (
     <Stack spacing={6} pt={12} overflowY={'scroll'} h={'100vh'} w={'full'}  >
       <Helmet>
-        <title>{profileData.displayName} (@{profileData.username}) | Unsoedfess</title>
+        <title>{profileData.displayName} (@{profileData.username}) / Unsoedfess</title>
       </Helmet>
       <Stack spacing={-16}  >
         {profileData.coverImages === '' || profileData.coverImages === 'default' ? (
