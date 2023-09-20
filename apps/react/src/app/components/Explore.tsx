@@ -15,7 +15,7 @@ export default function Explore() {
 
     const fetchTweet = async () => {
         try {
-            const res = await axios.get<ITweet[]>('/api/tweet?size=5&offset=' + pageIndex);
+            const res = await axios.get<ITweet[]>('/api/tweet?size=8&offset=' + pageIndex);
             setTweets([...tweets, ...res.data]);
             if (!res.data.length) {
                 setNoData(true);
