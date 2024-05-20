@@ -55,10 +55,7 @@ export default function Search() {
         )}
         <Stack overflowY={'scroll'} h={'full'}>
           <Box p={4} rounded={'2xl'} bg={'gray.100'}>
-            {/* <TwitterTweetEmbed tweetId="1570560060698558469" /> */}
-            {/* <TwitterTweetEmbed tweetId="1550658458843639808" />
-            <TwitterTweetEmbed tweetId="1548608447469432832" /> */}
-            <TwitterTimelineEmbed sourceType='profile' screenName={'jokowi'} />
+            <TwitterTimelineEmbed sourceType='profile' screenName={'Unsoedfess1963'} />
           </Box>
         </Stack>
       </Stack>
